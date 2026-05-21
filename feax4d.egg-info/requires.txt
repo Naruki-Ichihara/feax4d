@@ -1,0 +1,11 @@
+feax
+nlopt
+numpy
+scikit-image
+meshio
+matplotlib
+shapely
+
+[dev]
+pytest
+ruff
