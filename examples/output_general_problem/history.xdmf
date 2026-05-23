@@ -1,0 +1,2425 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Xdmf Version="3.0">
+  <Domain>
+    <Grid Name="TimeSeries" GridType="Collection" CollectionType="Temporal">
+      <Grid Name="frame_000000" GridType="Uniform">
+        <Time Value="0.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000000/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000001" GridType="Uniform">
+        <Time Value="1.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000001/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000002" GridType="Uniform">
+        <Time Value="2.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000002/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000003" GridType="Uniform">
+        <Time Value="3.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000003/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000004" GridType="Uniform">
+        <Time Value="4.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000004/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000005" GridType="Uniform">
+        <Time Value="5.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000005/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000006" GridType="Uniform">
+        <Time Value="6.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000006/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000007" GridType="Uniform">
+        <Time Value="7.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000007/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000008" GridType="Uniform">
+        <Time Value="8.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000008/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000009" GridType="Uniform">
+        <Time Value="9.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000009/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000010" GridType="Uniform">
+        <Time Value="10.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000010/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000011" GridType="Uniform">
+        <Time Value="11.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000011/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000012" GridType="Uniform">
+        <Time Value="12.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000012/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000013" GridType="Uniform">
+        <Time Value="13.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000013/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000014" GridType="Uniform">
+        <Time Value="14.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000014/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000015" GridType="Uniform">
+        <Time Value="15.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000015/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000016" GridType="Uniform">
+        <Time Value="16.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000016/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000017" GridType="Uniform">
+        <Time Value="17.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000017/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000018" GridType="Uniform">
+        <Time Value="18.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000018/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000019" GridType="Uniform">
+        <Time Value="19.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000019/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000020" GridType="Uniform">
+        <Time Value="20.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000020/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000021" GridType="Uniform">
+        <Time Value="21.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000021/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000022" GridType="Uniform">
+        <Time Value="22.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000022/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000023" GridType="Uniform">
+        <Time Value="23.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000023/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000024" GridType="Uniform">
+        <Time Value="24.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000024/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000025" GridType="Uniform">
+        <Time Value="25.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000025/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000026" GridType="Uniform">
+        <Time Value="26.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000026/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000027" GridType="Uniform">
+        <Time Value="27.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000027/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000028" GridType="Uniform">
+        <Time Value="28.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000028/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000029" GridType="Uniform">
+        <Time Value="29.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000029/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000030" GridType="Uniform">
+        <Time Value="30.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000030/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000031" GridType="Uniform">
+        <Time Value="31.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000031/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000032" GridType="Uniform">
+        <Time Value="32.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000032/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000033" GridType="Uniform">
+        <Time Value="33.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000033/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000034" GridType="Uniform">
+        <Time Value="34.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000034/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000035" GridType="Uniform">
+        <Time Value="35.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000035/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000036" GridType="Uniform">
+        <Time Value="36.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000036/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000037" GridType="Uniform">
+        <Time Value="37.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000037/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000038" GridType="Uniform">
+        <Time Value="38.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000038/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000039" GridType="Uniform">
+        <Time Value="39.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000039/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000040" GridType="Uniform">
+        <Time Value="40.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000040/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000041" GridType="Uniform">
+        <Time Value="41.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000041/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000042" GridType="Uniform">
+        <Time Value="42.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000042/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000043" GridType="Uniform">
+        <Time Value="43.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000043/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000044" GridType="Uniform">
+        <Time Value="44.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000044/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000045" GridType="Uniform">
+        <Time Value="45.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000045/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000046" GridType="Uniform">
+        <Time Value="46.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000046/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000047" GridType="Uniform">
+        <Time Value="47.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000047/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000048" GridType="Uniform">
+        <Time Value="48.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000048/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000049" GridType="Uniform">
+        <Time Value="49.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000049/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000050" GridType="Uniform">
+        <Time Value="50.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000050/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000051" GridType="Uniform">
+        <Time Value="51.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000051/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000052" GridType="Uniform">
+        <Time Value="52.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000052/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000053" GridType="Uniform">
+        <Time Value="53.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000053/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000054" GridType="Uniform">
+        <Time Value="54.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000054/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000055" GridType="Uniform">
+        <Time Value="55.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000055/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000056" GridType="Uniform">
+        <Time Value="56.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000056/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000057" GridType="Uniform">
+        <Time Value="57.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000057/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000058" GridType="Uniform">
+        <Time Value="58.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000058/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000059" GridType="Uniform">
+        <Time Value="59.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000059/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000060" GridType="Uniform">
+        <Time Value="60.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000060/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+      <Grid Name="frame_000061" GridType="Uniform">
+        <Time Value="61.0" />
+        <Topology TopologyType="Quadrilateral" NumberOfElements="1152">
+          <DataItem Dimensions="1152 4" NumberType="Int" Format="HDF">history.h5:/mesh/cells</DataItem>
+        </Topology>
+        <Geometry GeometryType="XY">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="8" Format="HDF">history.h5:/mesh/points</DataItem>
+        </Geometry>
+        <Attribute Name="density_bot" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/density_bot</DataItem>
+        </Attribute>
+        <Attribute Name="density_top" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/density_top</DataItem>
+        </Attribute>
+        <Attribute Name="director_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/director_bot</DataItem>
+        </Attribute>
+        <Attribute Name="director_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/director_top</DataItem>
+        </Attribute>
+        <Attribute Name="a2_bot" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/a2_bot</DataItem>
+        </Attribute>
+        <Attribute Name="a2_top" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/a2_top</DataItem>
+        </Attribute>
+        <Attribute Name="displacement" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 3" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/displacement</DataItem>
+        </Attribute>
+        <Attribute Name="rotation" AttributeType="Vector" Center="Node">
+          <DataItem Dimensions="1225 2" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/rotation</DataItem>
+        </Attribute>
+        <Attribute Name="w_target" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/w_target</DataItem>
+        </Attribute>
+        <Attribute Name="w_error" AttributeType="Scalar" Center="Node">
+          <DataItem Dimensions="1225 1" NumberType="Float" Precision="4" Format="HDF">history.h5:/frame_000061/point/w_error</DataItem>
+        </Attribute>
+      </Grid>
+    </Grid>
+  </Domain>
+</Xdmf>

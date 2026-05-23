@@ -40,6 +40,7 @@ def main():
         polymer_fill=True,                         # fill non-fibre regions with polymer
         infill_angle=[0.0, 90.0],                  # per-layer polymer scan direction
         infill_pitch=1.0,                          # polymer line spacing [mm]
+        layer_print_layers=[3, 3],                 # print laminae per design layer (thickness)
         connection_threshold=10.0,                 # merge fibre path ends within 10 mm
     )
     print("\nG-code:", result["gcode_path"])

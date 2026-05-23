@@ -17,6 +17,7 @@ from feax4d.shell import (
     BilayerThermalShell,
     N_FIELDS,
     make_bilayer_shell,
+    uniform_transverse_load,
     edge_predicate,
     cantilever_edges,
     clamp_bc,
@@ -54,6 +55,7 @@ from feax4d.utils import (
     load_summary,
     split_design,
 )
+from feax4d.viz import plot_print_layers, plot_print_paths
 from feax4d.gcode import (
     svg_to_gcode,
     svg_to_gcode_polymer_fill,
@@ -77,7 +79,7 @@ __all__ = [
     "Lamina", "Polymer", "make_layer_constitutive",
     # shell / problem
     "BilayerThermalShell", "N_FIELDS", "make_bilayer_shell",
-    "edge_predicate", "cantilever_edges", "clamp_bc",
+    "uniform_transverse_load", "edge_predicate", "cantilever_edges", "clamp_bc",
     # objectives
     "make_shape_match_fn", "ud_penalty_total",
     "rho_contrast_penalty_total", "mag_consistency_total",
@@ -90,6 +92,8 @@ __all__ = [
     "director_from_a2", "generate_fibre_paths",
     # persistence
     "save_result", "load_design", "load_summary", "split_design",
+    # visualisation
+    "plot_print_layers", "plot_print_paths",
     # fibrifier g-code
     "svg_to_gcode", "svg_to_gcode_polymer_fill", "fibre_paths_to_gcode",
     "collect_layer_svgs",

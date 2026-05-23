@@ -30,16 +30,25 @@ _FIELD_NAMES = (
 
 
 def _jsonable(obj):
-    """Recursively convert dataclasses / Paths / callables to JSON-safe values."""
+    """Recursively convert a value to something JSON-serialisable.
+
+    Dataclasses → dicts, Paths → str, callables → ``"<callable>"``, lists/tuples
+    recurse; anything else that is not a JSON-native scalar/dict is summarised
+    by its type name (e.g. a feax ``Mesh`` or numpy array).
+    """
     if dataclasses.is_dataclass(obj) and not isinstance(obj, type):
         return {f.name: _jsonable(getattr(obj, f.name)) for f in dataclasses.fields(obj)}
     if isinstance(obj, Path):
         return str(obj)
+    if isinstance(obj, dict):
+        return {str(k): _jsonable(v) for k, v in obj.items()}
     if isinstance(obj, (list, tuple)):
         return [_jsonable(v) for v in obj]
     if callable(obj):
         return "<callable>"
-    return obj
+    if obj is None or isinstance(obj, (str, bool, int, float)):
+        return obj
+    return f"<{type(obj).__name__}>"
 
 
 def split_design(x_opt, n_nodes):

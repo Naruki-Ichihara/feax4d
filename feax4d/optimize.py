@@ -13,7 +13,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Callable, Optional, Sequence
 
 import jax
 import jax.numpy as np
@@ -38,24 +38,48 @@ from feax4d.objectives import (
 
 @dataclass
 class OptimizeConfig:
-    """All parameters of one bilayer-shell optimisation run."""
+    """All parameters of one bilayer-shell optimisation run.
 
-    # Geometry (rectangular plate, span Lx × width Ly).
+    The problem domain, boundary conditions and loads can be supplied
+    explicitly (general case) or left to the built-in rectangular-cantilever
+    convenience:
+
+    * **General**: pass ``mesh`` (any feax mesh), ``bc_specs`` or ``bc_fn``
+      (Dirichlet BCs), and ``load_location_fns`` + ``surface_load_fns``
+      (Neumann loads).
+    * **Convenience**: leave those ``None`` and a rectangle ``Lx×Ly`` (``Nx×Ny``
+      QUAD4) clamped on the ``clamp`` edge with a uniform transverse load
+      ``load_mag`` on the opposite edge is built automatically.
+    """
+
+    # ── Domain ──
+    # Explicit mesh (any feax mesh).  If None, a rectangle is built below.
+    mesh: Optional[object] = None
+    # Rectangle fallback (used only when ``mesh is None``).
     Lx: float = 200.0e-3
     Ly: float = 100.0e-3
     Nx: int = 80
     Ny: int = 40
 
-    # Materials.
+    # ── Boundary conditions ──
+    # Provide ONE of: a list of fe.DirichletBCSpec, or a builder bc_fn(problem)
+    # -> fe.DirichletBC.  If both None, the ``clamp`` edge is fully clamped.
+    bc_specs: Optional[Sequence] = None
+    bc_fn: Optional[Callable] = None
+    clamp: str = "right"             # cantilever convenience clamp edge
+
+    # ── Loads ──
+    # General Neumann loads: where they apply + the surface weak form per
+    # region (signature (vals, x, *iv) -> [t_uvw(3,), t_theta(2,)]).
+    load_location_fns: Optional[Sequence[Callable]] = None
+    surface_load_fns: Optional[Sequence[Callable]] = None
+    # Cantilever convenience: uniform transverse load on the free edge.
+    load_mag: float = 5.0            # N/m
+
+    # Materials / thermal.
     lamina: Lamina = field(default_factory=Lamina)
     polymer: Polymer = field(default_factory=Polymer)
-
-    # Loads.
     delta_t: float = -150.0          # K, one-shot cooling
-    load_mag: float = 5.0            # N/m, transverse line load on the free edge
-
-    # Cantilever clamp edge (load is applied on the opposite, free edge).
-    clamp: str = "right"
 
     # Objective: target transverse field w_target(x, y).  None ⇒ flat (w≡0),
     # i.e. the stay-flat / load-compensation objective.
@@ -65,8 +89,11 @@ class OptimizeConfig:
     rho_init: float = 0.5
     simp_penalty: float = 3.0
     sgn_beta: float = 10.0
-    filter_rho_frac: float = 0.05    # × Lx
-    filter_theta_frac: float = 0.05  # × Lx
+    # Helmholtz filter radii.  Absolute (m) if given, else ``frac`` × domain size.
+    filter_rho_radius: Optional[float] = None
+    filter_theta_radius: Optional[float] = None
+    filter_rho_frac: float = 0.05
+    filter_theta_frac: float = 0.05
     x3_lb: float = -1.0
     x3_ub: float = 1.0
     ori_tol: float = 1e-2
@@ -180,23 +207,51 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
     out.mkdir(parents=True, exist_ok=True)
     log = print if cfg.verbose else (lambda *a, **k: None)
 
-    mesh = fe.mesh.rectangle_mesh(
-        Nx=cfg.Nx, Ny=cfg.Ny, domain_x=cfg.Lx, domain_y=cfg.Ly, ele_type="QUAD4",
-    )
+    # ── Domain: caller-supplied mesh, else a rectangle. ──
+    if cfg.mesh is not None:
+        mesh = cfg.mesh
+    else:
+        mesh = fe.mesh.rectangle_mesh(
+            Nx=cfg.Nx, Ny=cfg.Ny, domain_x=cfg.Lx, domain_y=cfg.Ly, ele_type="QUAD4",
+        )
     n_nodes = mesh.points.shape[0]
+    pts = onp.asarray(mesh.points)
     log(f"Mesh: {n_nodes} nodes, {mesh.cells.shape[0]} cells")
 
-    tol = 1e-5 * max(cfg.Lx, cfg.Ly)
-    clamped_edge, free_edge = cantilever_edges(cfg.clamp, cfg.Lx, cfg.Ly, tol)
+    # Characteristic size for the default (fractional) filter radius / tol.
+    span = float(max(pts[:, 0].max() - pts[:, 0].min(),
+                     pts[:, 1].max() - pts[:, 1].min()))
+    tol = 1e-5 * span
+
+    # ── Loads: explicit (location_fns + surface_load_fns) or cantilever. ──
+    if cfg.load_location_fns is not None:
+        load_loc_fns = tuple(cfg.load_location_fns)
+        load_fns = cfg.surface_load_fns      # None ⇒ uniform load_mag per region
+    else:
+        # Cantilever convenience: uniform transverse load on the free edge.
+        _, free_edge = cantilever_edges(cfg.clamp, cfg.Lx, cfg.Ly, tol)
+        load_loc_fns = (free_edge,)
+        load_fns = None
 
     problem = make_bilayer_shell(
-        mesh, cfg.lamina, cfg.polymer, cfg.delta_t, cfg.load_mag,
-        sgn_beta=cfg.sgn_beta, location_fns=(free_edge,),
+        mesh, cfg.lamina, cfg.polymer, cfg.delta_t,
+        sgn_beta=cfg.sgn_beta, location_fns=load_loc_fns,
+        surface_load_fns=load_fns, load_mag=cfg.load_mag,
     )
-    bc = clamp_bc(problem, clamped_edge)
 
-    filter_rho = gene.create_helmholtz_filter(mesh, radius=cfg.filter_rho_frac * cfg.Lx)
-    filter_theta = gene.create_helmholtz_filter(mesh, radius=cfg.filter_theta_frac * cfg.Lx)
+    # ── Boundary conditions: explicit specs / builder, else clamp one edge. ──
+    if cfg.bc_specs is not None:
+        bc = fe.DirichletBCConfig(list(cfg.bc_specs)).create_bc(problem)
+    elif cfg.bc_fn is not None:
+        bc = cfg.bc_fn(problem)
+    else:
+        clamped_edge, _ = cantilever_edges(cfg.clamp, cfg.Lx, cfg.Ly, tol)
+        bc = clamp_bc(problem, clamped_edge)
+
+    r_rho = cfg.filter_rho_radius if cfg.filter_rho_radius is not None else cfg.filter_rho_frac * span
+    r_theta = cfg.filter_theta_radius if cfg.filter_theta_radius is not None else cfg.filter_theta_frac * span
+    filter_rho = gene.create_helmholtz_filter(mesh, radius=r_rho)
+    filter_theta = gene.create_helmholtz_filter(mesh, radius=r_theta)
     volume_fn = gene.create_volume_fn(problem)
 
     # Target transverse field at the nodes (flat if no target_fn).

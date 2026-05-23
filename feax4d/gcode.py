@@ -114,6 +114,9 @@ def svg_to_gcode_polymer_fill(
     infill_angle: Union[float, Sequence[float]] = 45.0,
     infill_pitch: float = 0.8,
     infill_inset: float = 0.3,
+    layer_print_layers: Union[int, Sequence[int]] = 1,
+    cross_hatch: bool = True,
+    coplanar: bool = True,
     connection_threshold: float = 5.0,
     min_fiber_length: float = 23.73,
     smooth_sigma: float = 3.0,
@@ -127,13 +130,24 @@ def svg_to_gcode_polymer_fill(
     """Build Fibrifier g-code where each layer = polymer infill (P) + fibre (F).
 
     Unlike :func:`svg_to_gcode` (which only emits a polymer layer when the SVG
-    carries a density *contour*), this fills the **whole footprint** of every
-    layer with polymer infill scan-lines and lays the fibre paths on the
-    adjacent fibre layer — i.e. polymer everywhere the fibre isn't.  Only the
-    infill is emitted; no perimeter/contour loop is printed.
+    carries a density *contour*), this fills the polymer region of every layer
+    with infill scan-lines and lays the fibre paths on the adjacent fibre
+    layer — i.e. polymer everywhere the fibre isn't.  Only the infill is
+    emitted; no perimeter/contour loop is printed.
 
-    Parameters mirror :func:`svg_to_gcode`, plus ``infill_angle`` (scalar or
-    one angle per SVG), ``infill_pitch`` and ``infill_inset``.
+    Build thickness with ``layer_print_layers`` — the number of physical print
+    laminae for **each design layer** (int for all layers, or one value per
+    layer, e.g. ``[n0, n1]``).  Each design layer's pattern (its polymer infill
+    + its fibres) is stacked ``n_i`` times in Z, so design layer ``i`` becomes a
+    coherent thick lamina of thickness ``n_i * layer_height``.  The part stays a
+    true bilayer (bottom = layer 0, top = layer 1) — mechanically consistent
+    with re-optimising at ``T_LAYER_i = n_i * layer_height`` (so increasing
+    thickness is just a thickness change in the optimisation, not a different
+    laminate).  With ``cross_hatch`` the polymer infill rotates +90° between
+    successive laminae of the same design layer.
+
+    Other parameters mirror :func:`svg_to_gcode`, plus ``infill_angle``
+    (scalar or one angle per SVG), ``infill_pitch`` and ``infill_inset``.
     """
     if params is None:
         params = FibrifierParams()
@@ -149,6 +163,8 @@ def svg_to_gcode_polymer_fill(
     svg_paths = [str(s) for s in svg_paths]
     angles = (list(infill_angle) if isinstance(infill_angle, (list, tuple))
               else [float(infill_angle)] * len(svg_paths))
+    counts = (list(layer_print_layers) if isinstance(layer_print_layers, (list, tuple))
+              else [int(layer_print_layers)] * len(svg_paths))
 
     # Preview naming: one PNG per design layer.  Without an explicit
     # ``preview_path`` they are written next to the g-code as
@@ -160,6 +176,12 @@ def svg_to_gcode_polymer_fill(
             return str(pv_base.with_name(f"{pv_base.stem}_layer{i}.png"))
         return str(pv_base.with_name(f"{_Path(svg).stem}_preview.png"))
 
+    def _infill_at(contour, svg, angle):
+        """Polymer infill at one angle: density contour if present, else footprint."""
+        if contour:
+            return _generate_infill_paths(contour, angle, infill_pitch, infill_inset), "density-limited"
+        return _polymer_infill_for_svg(svg, angle, infill_pitch, infill_inset), "footprint"
+
     layers = []
     all_fiber, all_contour = [], []
     preview_paths = []
@@ -170,33 +192,40 @@ def svg_to_gcode_polymer_fill(
             min_fiber_length=min_fiber_length, flip_y=flip_y,
             smooth_sigma=smooth_sigma, decimate_epsilon=decimate_epsilon,
         )
-        # Polymer region: prefer the density-derived contour written by
-        # generate_fibre_paths (fibre area excluded); fall back to the full
-        # plate footprint for legacy SVGs that carry no contour.
-        if contour:
-            infill = _generate_infill_paths(
-                contour, angles[i % len(angles)], infill_pitch, infill_inset)
-            region = "density-limited"
-        else:
-            infill = _polymer_infill_for_svg(
-                svg, angles[i % len(angles)], infill_pitch, infill_inset)
-            region = "footprint (no density contour in SVG)"
-        print(f"  Polymer infill: {len(infill)} paths "
-              f"(angle={angles[i % len(angles)]}°, pitch={infill_pitch} mm, {region})")
+        base_angle = angles[i % len(angles)]
+        n_i = max(1, counts[i % len(counts)])
 
-        # Polymer layer first (matrix), then fibre layer on top.
-        layers.append({"fiber": [], "contour": infill, "type": "P"})
-        all_contour.extend(infill)
-        if fiber:
-            layers.append({"fiber": fiber, "contour": [], "type": "F"})
-            all_fiber.extend(fiber)
+        # Stack n_i identical laminae for this design layer.  Each lamina is
+        # one polymer print-layer (+ one fibre print-layer where the design
+        # layer has fibres); cross_hatch rotates the infill +90° per lamina.
+        first_infill = None
+        region = "footprint"
+        for r in range(n_i):
+            ang = base_angle + (90.0 * r if cross_hatch else 0.0)
+            infill, region = _infill_at(contour, svg, ang)
+            layers.append({"fiber": [], "contour": infill, "type": "P"})
+            all_contour.extend(infill)
+            if first_infill is None:
+                first_infill = infill
+            if fiber:
+                # coplanar ⇒ fibre shares the polymer matrix's Z (layer_height
+                # 0 advance), since the density-limited polymer and the fibre
+                # tile complementary in-plane regions of the same lamina.
+                f_layer = {"fiber": fiber, "contour": [], "type": "F"}
+                if coplanar:
+                    f_layer["layer_height"] = 0.0
+                layers.append(f_layer)
+                all_fiber.extend(fiber)
+        print(f"  Layer {i}: {n_i} printed lamina(e) × "
+              f"[polymer{' + fibre' if fiber else ''}] "
+              f"({region}, base {base_angle}°, {len(fiber)} fibre paths/lamina)")
 
-        # Per-layer preview: this layer's fibres + polymer infill.
+        # Per-layer preview: this layer's fibres + (first) polymer infill.
         pv = _layer_preview_path(i, svg)
         fig, _ = _plot_paths(
-            fiber, infill,
-            title=f"Layer {i}: {len(fiber)} fibre + {len(infill)} polymer "
-                  f"paths (infill {angles[i % len(angles)]}°)")
+            fiber, first_infill or [],
+            title=f"Layer {i}: {len(fiber)} fibre + polymer "
+                  f"(x{n_i} print laminae)")
         fig.savefig(pv, dpi=200, bbox_inches="tight")
         plt.close(fig)
         preview_paths.append(pv)
@@ -209,11 +238,16 @@ def svg_to_gcode_polymer_fill(
         "gcode_path": output_gcode,
         "preview_paths": preview_paths,
         "preview_path": preview_paths[0] if preview_paths else None,
+        "layer_print_layers": counts,
         "n_layers": len(layers),
         "n_fiber_paths": len(all_fiber),
         "n_polymer_paths": len(all_contour),
         "total_fiber_mm": sum(p.length for p in all_fiber),
         "total_stretches": gen._stretch_counter,
+        # The assembled per-print-layer structure (in print order) and the
+        # layer height — consumed by feax4d.viz for 3D print-path plots.
+        "layers": layers,
+        "layer_height": params.layer_height,
     }
 
 
@@ -226,6 +260,9 @@ def fibre_paths_to_gcode(
     infill_angle: Union[float, Sequence[float]] = 45.0,
     infill_pitch: float = 0.8,
     infill_inset: float = 0.3,
+    layer_print_layers: Union[int, Sequence[int]] = 1,
+    cross_hatch: bool = True,
+    coplanar: bool = True,
     skip_empty: Optional[bool] = None,
     **kwargs,
 ):
@@ -251,6 +288,19 @@ def fibre_paths_to_gcode(
     infill_angle, infill_pitch, infill_inset
         Polymer infill scan-line angle (scalar or one per layer), spacing and
         boundary inset [mm].  Used only when ``polymer_fill`` is True.
+    layer_print_layers : int or sequence of int
+        Number of physical print laminae per design layer (int for all, or one
+        per layer e.g. ``[n0, n1]``) — this is how you build part thickness.
+        Design layer ``i`` is stacked ``n_i`` times, keeping the part a true
+        bilayer; mechanically consistent with re-optimising at
+        ``T_LAYER_i = n_i * layer_height``.
+    cross_hatch : bool
+        Rotate the polymer infill +90° between successive laminae of a layer.
+    coplanar : bool
+        If True (default), the fibre of each lamina shares the **same Z** as
+        its polymer matrix (they tile complementary in-plane regions, so the
+        lamina is one ``layer_height`` thick).  If False, the fibre is printed
+        one layer above its polymer (Fibrifier "polymer bed + fibre on top").
     skip_empty : bool, optional
         Skip path-less SVGs.  Defaults to False when ``polymer_fill`` (an
         all-polymer layer still needs filling) and True otherwise.
@@ -293,7 +343,8 @@ def fibre_paths_to_gcode(
         return svg_to_gcode_polymer_fill(
             svgs, output_gcode=output_gcode, params=params,
             infill_angle=infill_angle, infill_pitch=infill_pitch,
-            infill_inset=infill_inset, **kwargs,
+            infill_inset=infill_inset, layer_print_layers=layer_print_layers,
+            cross_hatch=cross_hatch, coplanar=coplanar, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
 

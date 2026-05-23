@@ -945,7 +945,11 @@ class FibrifierGcodeGenerator:
             self._write_header(f, bbox=bbox, n_layers=n_layers)
             z = 0.0
             for layer_idx, layer_data in enumerate(layers):
-                lh = layer_data.get("layer_height") or self.layer_height
+                # Honor an explicit per-layer height, including 0.0 (a layer
+                # printed coplanar with the previous one, e.g. fibre laid in
+                # the same Z as its polymer matrix).
+                lh = layer_data.get("layer_height")
+                lh = self.layer_height if lh is None else lh
                 z = round(z + lh, 4)
                 fiber_paths = layer_data.get("fiber", [])
                 contour_paths = layer_data.get("contour", [])

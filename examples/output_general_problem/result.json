@@ -1,0 +1,97 @@
+{
+  "summary": {
+    "best_obj": 0.5513652656112349,
+    "best_iter": 60,
+    "n_iters": 60,
+    "stop_reason": "MAXEVAL_REACHED (cap hit \u2014 not converged)",
+    "denom": 3.8382743466696735e-05,
+    "n_nodes": 1225,
+    "xdmf_path": "/workspace/feax4d/examples/output_general_problem/history.xdmf"
+  },
+  "config": {
+    "mesh": "<Mesh>",
+    "Lx": 0.2,
+    "Ly": 0.1,
+    "Nx": 80,
+    "Ny": 40,
+    "bc_specs": [
+      {
+        "location": "<callable>",
+        "component": "all",
+        "value": "<callable>",
+        "variable_index": 0
+      },
+      {
+        "location": "<callable>",
+        "component": "all",
+        "value": "<callable>",
+        "variable_index": 1
+      },
+      {
+        "location": "<callable>",
+        "component": "all",
+        "value": "<callable>",
+        "variable_index": 0
+      },
+      {
+        "location": "<callable>",
+        "component": "all",
+        "value": "<callable>",
+        "variable_index": 1
+      }
+    ],
+    "bc_fn": null,
+    "clamp": "right",
+    "load_location_fns": [
+      "<callable>"
+    ],
+    "surface_load_fns": [
+      "<callable>"
+    ],
+    "load_mag": 5.0,
+    "lamina": {
+      "E1": 140000000000.0,
+      "E2": 10000000000.0,
+      "G12": 5000000000.0,
+      "nu12": 0.3,
+      "G13": 5000000000.0,
+      "G23": 3000000000.0,
+      "alpha_fibre": -5e-07,
+      "alpha_trans": 3e-05,
+      "thickness": 0.0005
+    },
+    "polymer": {
+      "E": 2000000000.0,
+      "nu": 0.4,
+      "alpha": 7e-05
+    },
+    "delta_t": -150.0,
+    "target_fn": null,
+    "rho_init": 0.5,
+    "simp_penalty": 3.0,
+    "sgn_beta": 10.0,
+    "filter_rho_radius": 0.012,
+    "filter_theta_radius": 0.012,
+    "filter_rho_frac": 0.05,
+    "filter_theta_frac": 0.05,
+    "x3_lb": -1.0,
+    "x3_ub": 1.0,
+    "ori_tol": 0.01,
+    "ud_penalty": 1.0,
+    "rho_contrast_penalty": 0.5,
+    "mag_consistency_penalty": 1.0,
+    "ftol_rel": 1e-05,
+    "xtol_rel": 1e-05,
+    "xtol_abs": 1e-05,
+    "max_iter": 60,
+    "output_dir": "/workspace/feax4d/examples/output_general_problem",
+    "save_vtu": false,
+    "save_result": true,
+    "snapshot_every": 1,
+    "verbose": true
+  },
+  "final": {
+    "obj": 0.5513652656112349,
+    "mean_density": 0.4312711563200128
+  }
+}

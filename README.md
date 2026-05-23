@@ -63,6 +63,43 @@ See [`examples/stable_plate.py`](examples/stable_plate.py),
 [`examples/fibre_paths.py`](examples/fibre_paths.py) and
 [`examples/gcode.py`](examples/gcode.py).
 
+### General mesh / BC / load
+
+`optimize` is not tied to the rectangular cantilever — supply your own domain,
+Dirichlet BCs and Neumann loads:
+
+```python
+import jax.numpy as jnp
+import feax as fe
+import feax4d
+
+mesh = fe.mesh.rectangle_mesh(Nx=48, Ny=24, domain_x=0.24, domain_y=0.12, ele_type="QUAD4")
+left  = lambda p: jnp.isclose(p[0], 0.0,  atol=1e-6)
+right = lambda p: jnp.isclose(p[0], 0.24, atol=1e-6)
+
+bc_specs = [fe.DirichletBCSpec(location=e, component="all", value=0.0, variable_index=v)
+            for e in (left, right) for v in (0, 1)]            # doubly clamped
+
+strip = lambda p: jnp.isclose(p[0], 0.12, atol=2.5e-3)
+def strip_load(vals, x, *iv):                                  # (vals, x, *iv) -> [t_uvw, t_theta]
+    return [jnp.array([0.0, 0.0, 10.0 * (x[1] - 0.06) / 0.06]), jnp.zeros(2)]
+
+cfg = feax4d.OptimizeConfig(
+    mesh=mesh, bc_specs=bc_specs,
+    load_location_fns=(strip,), surface_load_fns=[strip_load],
+    filter_rho_radius=0.012, filter_theta_radius=0.012,        # absolute radii for a general mesh
+    target_fn=None,
+)
+feax4d.optimize(cfg)
+```
+
+- `mesh` — any feax mesh (omit ⇒ a rectangle from `Lx,Ly,Nx,Ny`).
+- `bc_specs` (list of `fe.DirichletBCSpec`) **or** `bc_fn(problem) -> fe.DirichletBC`; omit both ⇒ the `clamp` edge is fully clamped.
+- `load_location_fns` + `surface_load_fns` (one weak form per region); omit ⇒ uniform transverse `load_mag` on the free edge.
+- `filter_{rho,theta}_radius` set absolute filter radii (else `frac` × domain span).
+
+See [`examples/general_problem.py`](examples/general_problem.py).
+
 ## Low-level building blocks
 
 The package also exposes composable pieces so you can build your own loop:
@@ -75,6 +112,7 @@ The package also exposes composable pieces so you can build your own loop:
 | Optimiser | `pack`, `unpack`, `initial_design`, `bounds`, `make_process_fn` |
 | Fibre paths | `setup_aligned_sh`, `run_aligned_sh_steps`, `extract_fibre_paths`, `write_paths_svg`, `director_from_a2` |
 | G-code | `svg_to_gcode`, `fibre_paths_to_gcode`, `collect_layer_svgs`, `FibrifierParams` |
+| Visualisation | `plot_print_paths`, `plot_print_layers` (3D toolpath view) |
 | Persistence | `save_result`, `load_design`, `load_summary`, `split_design` |
 
 ## Notes

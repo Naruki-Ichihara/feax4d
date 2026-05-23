@@ -3,16 +3,19 @@
 :class:`BilayerThermalShell` is a :class:`feax.Problem` whose material at
 each quadrature point is a per-layer density + fibre-orientation design
 (8 node-based scalar fields).  Cooling ``ΔT`` is applied in one shot as a
-thermal eigenstrain (linear theory), and an optional uniform transverse
-line load is applied on a free edge via the surface weak form.
+thermal eigenstrain (linear theory).  Mechanical loads are arbitrary surface
+weak forms registered through ``location_fns`` + ``surface_load_fns`` — the
+mesh, boundary conditions and loads are all caller-supplied, so the problem
+is not tied to a rectangular cantilever.
 
-The constitutive blend, thicknesses, ``ΔT`` and load magnitude are passed
-through ``additional_info`` (hashable scalars / frozen dataclasses) so the
-problem stays a valid JAX pytree.
+The constitutive blend, thicknesses, ``ΔT``, smooth-sign sharpness and the
+surface-load callables are passed through ``additional_info`` (hashable
+scalars / frozen dataclasses / function tuples) so the problem stays a valid
+JAX pytree.
 """
 from __future__ import annotations
 
-from typing import Callable, Tuple
+from typing import Callable, Optional, Sequence, Tuple
 
 import jax.numpy as np
 
@@ -30,6 +33,18 @@ from feax4d.materials import Lamina, Polymer, make_layer_constitutive
 N_FIELDS = 8   # (rho, x1, x2, x3) × 2 layers
 
 
+def uniform_transverse_load(load_mag: float) -> Callable:
+    """A surface weak form applying a uniform transverse line load (physical −z).
+
+    In feax the residual integrand is ``+= t = −t_phys``, so a downward load
+    ``t_phys = −load_mag`` is written ``tz = +load_mag`` on the w-component of
+    variable 0 (and zero moment traction on variable 1).
+    """
+    def edge_load(vals, x, *iv):
+        return [np.array([0.0, 0.0, load_mag]), np.zeros(2)]
+    return edge_load
+
+
 class BilayerThermalShell(fe.Problem):
     """Per-quad-point bilayer laminate with density + orientation per layer.
 
@@ -38,22 +53,24 @@ class BilayerThermalShell(fe.Problem):
         (rho0, x1_0, x2_0, x3_0,  rho1, x1_1, x2_1, x3_1)
 
     Linear strains (no von Kármán); the cooling ``ΔT`` is applied in one
-    shot via :func:`feax.mechanics.shell.laminate_thermal_loads`.  A uniform
-    transverse line load ``load_mag`` (physical −z) is applied on whatever
-    edge is registered through ``location_fns``.
+    shot via :func:`feax.mechanics.shell.laminate_thermal_loads`.  Mechanical
+    loads are the caller-supplied surface weak forms ``surface_load_fns``
+    (one per entry of ``location_fns``); each has signature
+    ``(vals, x, *iv) -> [t_uvw(3,), t_theta(2,)]``.
 
-    Built with ``additional_info=(lamina, polymer, thicks, delta_t,
-    load_mag, sgn_beta)`` — see :func:`make_bilayer_shell`.
+    Built with ``additional_info=(lamina, polymer, thicks, delta_t, sgn_beta,
+    surface_load_fns)`` — see :func:`make_bilayer_shell`.
     """
 
-    def custom_init(self, lamina, polymer, thicks, delta_t, load_mag, sgn_beta):
+    def custom_init(self, lamina, polymer, thicks, delta_t, sgn_beta,
+                    surface_load_fns):
         self.lamina = lamina
         self.polymer = polymer
         self.thicks = np.asarray(thicks)
         self.zero_thetas = np.zeros(len(thicks))
         self.delta_t = delta_t
-        self.load_mag = load_mag
         self.sgn_beta = sgn_beta
+        self.surface_load_fns = tuple(surface_load_fns)
         self.layer_fn = make_layer_constitutive(lamina, polymer, sgn_beta)
 
     def get_weak_form(self):
@@ -98,16 +115,8 @@ class BilayerThermalShell(fe.Problem):
         return weak_form
 
     def get_surface_weak_forms(self):
-        # Uniform transverse line load on the registered (free) edge,
-        # physical direction −z.  In feax the residual integrand is
-        # ``+= t = −t_phys``, so a downward load ``t_phys = −load_mag`` is
-        # written ``tz = +load_mag`` on the w-component of variable 0.
-        load_mag = self.load_mag
-
-        def edge_load(vals, x, *iv):
-            return [np.array([0.0, 0.0, load_mag]), np.zeros(2)]
-
-        return [edge_load]
+        # One caller-supplied surface weak form per registered location_fn.
+        return list(self.surface_load_fns)
 
 
 def make_bilayer_shell(
@@ -115,21 +124,35 @@ def make_bilayer_shell(
     lamina: Lamina,
     polymer: Polymer,
     delta_t: float,
-    load_mag: float,
     sgn_beta: float = 10.0,
     location_fns: Tuple[Callable, ...] = (),
+    surface_load_fns: Optional[Sequence[Callable]] = None,
+    load_mag: float = 0.0,
 ) -> BilayerThermalShell:
     """Construct a two-variable (vec=[3,2]) bilayer thermal shell on ``mesh``.
 
-    ``location_fns`` selects the edge(s) where the transverse line load is
-    applied (typically the single free edge of a cantilever).
+    ``mesh`` may be any feax mesh.  ``location_fns`` selects the boundary
+    region(s) where surface loads apply, and ``surface_load_fns`` gives one
+    weak form per region (signature ``(vals, x, *iv) -> [t_uvw, t_theta]``).
+    If ``surface_load_fns`` is ``None``, each registered region gets a uniform
+    transverse load of magnitude ``load_mag`` (the cantilever convenience).
     """
     thicks = (float(lamina.thickness), float(lamina.thickness))
+    location_fns = tuple(location_fns)
+    if surface_load_fns is None:
+        surface_load_fns = tuple(uniform_transverse_load(load_mag) for _ in location_fns)
+    else:
+        surface_load_fns = tuple(surface_load_fns)
+        if len(surface_load_fns) != len(location_fns):
+            raise ValueError(
+                f"surface_load_fns ({len(surface_load_fns)}) must match "
+                f"location_fns ({len(location_fns)})"
+            )
     return BilayerThermalShell(
         mesh=[mesh, mesh], vec=[3, 2], dim=2,
         ele_type=[mesh.ele_type, mesh.ele_type],
-        location_fns=tuple(location_fns),
-        additional_info=(lamina, polymer, thicks, delta_t, load_mag, sgn_beta),
+        location_fns=location_fns,
+        additional_info=(lamina, polymer, thicks, delta_t, sgn_beta, surface_load_fns),
     )
 
 
