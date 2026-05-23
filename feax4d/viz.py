@@ -154,3 +154,100 @@ def plot_print_paths(result: dict, **kwargs):
     return plot_print_layers(result["layers"],
                              layer_height=result.get("layer_height", 0.15),
                              **kwargs)
+
+
+def plot_print_layers_plotly(
+    layers: Sequence[dict],
+    layer_height: float = 0.15,
+    fiber_cmap: str = "tab20",
+    polymer_color: str = "#9fb6d4",
+    fiber_width: float = 3.0,
+    polymer_width: float = 1.5,
+    polymer_opacity: float = 0.25,
+    z_exaggeration: Optional[float] = None,
+    height: int = 650,
+    title: Optional[str] = None,
+):
+    """Interactive 3D print-path view as a **plotly** figure (mouse-rotatable).
+
+    Same content as :func:`plot_print_layers` but rendered with plotly, which
+    is interactive inline in Colab / Jupyter (drag to rotate, scroll to zoom).
+    Returns a ``plotly.graph_objects.Figure``; call ``.show()`` to display.
+
+    Requires ``plotly`` (pre-installed on Colab; ``pip install plotly`` locally).
+    """
+    import plotly.graph_objects as go
+    import matplotlib.cm as cm
+    import matplotlib.colors as mcolors
+
+    cmap = cm.get_cmap(fiber_cmap)
+    n_colors = getattr(cmap, "N", 20)
+
+    # In-plane bounds + true stacked height (coplanar layers add 0).
+    xmin = ymin = onp.inf
+    xmax = ymax = -onp.inf
+    for ld in layers:
+        for p in list(ld.get("fiber", [])) + list(ld.get("contour", [])):
+            n = onp.asarray(p.nodes)
+            xmin = min(xmin, n[:, 0].min()); xmax = max(xmax, n[:, 0].max())
+            ymin = min(ymin, n[:, 1].min()); ymax = max(ymax, n[:, 1].max())
+    if not onp.isfinite(xmin):
+        xmin = ymin = 0.0; xmax = ymax = 1.0
+    span = max(xmax - xmin, ymax - ymin, 1e-9)
+    total_z = max(sum(
+        (layer_height if ld.get("layer_height") is None else ld.get("layer_height"))
+        for ld in layers), 1e-9)
+    if z_exaggeration is None:
+        z_exaggeration = max(1.0, (0.3 * span) / total_z)
+
+    traces = []
+    z_cum = 0.0
+    for ld in layers:
+        lh = ld.get("layer_height")
+        lh = layer_height if lh is None else lh
+        z_cum += lh
+        z = z_cum * z_exaggeration
+        for p in ld.get("contour", []):
+            n = onp.asarray(p.nodes)
+            traces.append(go.Scatter3d(
+                x=n[:, 0], y=n[:, 1], z=onp.full(n.shape[0], z), mode="lines",
+                line=dict(color=polymer_color, width=polymer_width),
+                opacity=polymer_opacity, showlegend=False, hoverinfo="skip"))
+        for idx, p in enumerate(ld.get("fiber", [])):
+            n = onp.asarray(p.nodes)
+            traces.append(go.Scatter3d(
+                x=n[:, 0], y=n[:, 1], z=onp.full(n.shape[0], z), mode="lines",
+                line=dict(color=mcolors.to_hex(cmap(idx % n_colors)), width=fiber_width),
+                showlegend=False, hoverinfo="skip"))
+
+    z_plot = total_z * z_exaggeration
+    m = max(xmax - xmin, ymax - ymin, z_plot, 1e-9)
+    fig = go.Figure(traces)
+    fig.update_layout(
+        height=height, title=title or "Print paths (drag to rotate)",
+        margin=dict(l=0, r=0, t=30, b=0),
+        scene=dict(
+            xaxis_title="x [mm]", yaxis_title="y [mm]",
+            zaxis_title=f"z [mm] (×{z_exaggeration:.0f})",
+            aspectmode="manual",
+            aspectratio=dict(x=(xmax - xmin) / m, y=(ymax - ymin) / m, z=z_plot / m),
+        ),
+    )
+    return fig
+
+
+def plot_print_paths_plotly(result: dict, **kwargs):
+    """Interactive plotly 3D print-path view from a g-code result dict.
+
+    See :func:`plot_print_layers_plotly`.  ``result`` must carry the
+    ``layers`` / ``layer_height`` entries (``fibre_paths_to_gcode`` /
+    ``svg_to_gcode_polymer_fill`` output).
+    """
+    if "layers" not in result:
+        raise KeyError(
+            "result has no 'layers' — use fibre_paths_to_gcode(..., "
+            "polymer_fill=True) or svg_to_gcode_polymer_fill(...)."
+        )
+    return plot_print_layers_plotly(result["layers"],
+                                    layer_height=result.get("layer_height", 0.15),
+                                    **kwargs)

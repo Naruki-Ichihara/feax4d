@@ -55,7 +55,12 @@ from feax4d.utils import (
     load_summary,
     split_design,
 )
-from feax4d.viz import plot_print_layers, plot_print_paths
+from feax4d.viz import (
+    plot_print_layers,
+    plot_print_paths,
+    plot_print_layers_plotly,
+    plot_print_paths_plotly,
+)
 from feax4d.gcode import (
     svg_to_gcode,
     svg_to_gcode_polymer_fill,
@@ -94,6 +99,7 @@ __all__ = [
     "save_result", "load_design", "load_summary", "split_design",
     # visualisation
     "plot_print_layers", "plot_print_paths",
+    "plot_print_layers_plotly", "plot_print_paths_plotly",
     # fibrifier g-code
     "svg_to_gcode", "svg_to_gcode_polymer_fill", "fibre_paths_to_gcode",
     "collect_layer_svgs",

@@ -1,8 +1,9 @@
-"""3D visualisation of the printed toolpaths.
+"""Interactive 3D visualisation of the printed toolpaths.
 
 Builds the polymer-filled, multi-lamina print stack from the fibre paths of a
-stable-plate run and renders it in 3D: fibre toolpaths (red) and polymer-infill
-toolpaths (grey), stacked at their print Z heights.
+stable-plate run and renders it in 3D: fibre toolpaths (colour-coded per path)
+and polymer-infill toolpaths, stacked at their print Z heights.  Opens an
+interactive window — **drag with the mouse to rotate / zoom**.
 
     python examples/visualize.py
 
@@ -10,9 +11,7 @@ Run ``stable_plate.py`` and ``fibre_paths.py`` first to produce the fibre paths.
 """
 from pathlib import Path
 
-import matplotlib
-matplotlib.use("Agg")          # headless-safe; remove for an interactive window
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as plt   # default (interactive) backend — mouse-rotatable
 
 import feax4d
 
@@ -41,11 +40,13 @@ def main():
     fig = feax4d.plot_print_paths(result, elev=24, azim=-58)
     out = fibre_dir / "print_paths_3d.png"
     fig.savefig(out, dpi=200, bbox_inches="tight")
-    plt.show()
-    plt.close(fig)
     print(f"layers={result['n_layers']}  fibre toolpaths={result['n_fiber_paths']}  "
           f"polymer toolpaths={result['n_polymer_paths']}")
     print(f"Saved 3D print-path view to {out}")
+
+    # Interactive window: drag to rotate, scroll to zoom (needs a GUI backend;
+    # no-op under a headless/Agg backend).
+    plt.show()
 
 
 if __name__ == "__main__":

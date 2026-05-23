@@ -31,6 +31,9 @@ dev = [
     "pytest",
     "ruff",
 ]
+interactive = [
+    "plotly",        # interactive 3D print-path view (plot_print_paths_plotly); preinstalled on Colab
+]
 
 [tool.setuptools.packages.find]
 include = ["feax4d*"]
