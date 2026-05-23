@@ -24,6 +24,7 @@ dependencies = [
     "meshio",
     "matplotlib",
     "shapely",        # polymer infill region/scanline generation (fibrifier)
+    "tsp-solver2",    # TSP path ordering for fibre/infill toolpaths (fibrifier)
 ]
 
 [project.optional-dependencies]

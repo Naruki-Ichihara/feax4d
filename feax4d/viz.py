@@ -21,7 +21,7 @@ import numpy as onp
 def plot_print_layers(
     layers: Sequence[dict],
     layer_height: float = 0.15,
-    fiber_cmap: str = "tab20",
+    fiber_color: str = "#ff7f0e",
     polymer_color: str = "#9fb6d4",
     fiber_lw: float = 0.6,
     polymer_lw: float = 0.4,
@@ -35,9 +35,8 @@ def plot_print_layers(
 ):
     """Plot assembled print layers in 3D.
 
-    Each fibre path is coloured per-path with ``fiber_cmap`` (matching the
-    per-layer 2D preview from :func:`feax4d.generate_fibre_paths`); the polymer
-    infill is drawn faintly in a single colour behind it.
+    All fibre paths are drawn in a single colour (``fiber_color``); the polymer
+    infill is drawn faintly behind them.
 
     Parameters
     ----------
@@ -47,8 +46,8 @@ def plot_print_layers(
     layer_height : float
         Default Z increment per print layer (mm); a per-layer ``layer_height``
         of ``0.0`` (coplanar fibre/polymer) is honoured.
-    fiber_cmap : str
-        Matplotlib colormap cycled per fibre path (``tab20`` like the preview).
+    fiber_color : str
+        Colour for all fibre toolpaths (default orange).
     z_exaggeration : float, optional
         Multiplier applied to Z for display.  ``None`` auto-scales so the stack
         height is ~30% of the in-plane span; ``1.0`` keeps true proportions.
@@ -91,10 +90,7 @@ def plot_print_layers(
     if z_exaggeration is None:
         z_exaggeration = max(1.0, (0.3 * span) / total_z)
 
-    cmap = plt.get_cmap(fiber_cmap)
-    n_colors = getattr(cmap, "N", 20)
-
-    n_fiber = n_poly = max_fiber = 0
+    n_fiber = n_poly = 0
     z_cum = 0.0
     for ld in layers:
         # Honor an explicit per-layer height (0.0 ⇒ coplanar with the previous
@@ -109,12 +105,10 @@ def plot_print_layers(
             ax.plot(n[:, 0], n[:, 1], z, color=polymer_color, lw=polymer_lw,
                     alpha=polymer_alpha)
             n_poly += 1
-        # Fibre paths: one colour per path index (matches the 2D preview).
-        fibers = ld.get("fiber", [])
-        max_fiber = max(max_fiber, len(fibers))
-        for idx, p in enumerate(fibers):
+        # Fibre paths: single colour.
+        for p in ld.get("fiber", []):
             n = onp.asarray(p.nodes)
-            ax.plot(n[:, 0], n[:, 1], z, color=cmap(idx % n_colors), lw=fiber_lw)
+            ax.plot(n[:, 0], n[:, 1], z, color=fiber_color, lw=fiber_lw)
             n_fiber += 1
 
     ax.set_xlabel("x [mm]"); ax.set_ylabel("y [mm]")
@@ -127,14 +121,12 @@ def plot_print_layers(
     ax.set_box_aspect((xmax - xmin, ymax - ymin, max(total_z * z_exaggeration, 1e-9)))
 
     if legend:
-        # One entry per distinct fibre-path index (F0, F1, …) + polymer.
         from matplotlib.lines import Line2D
-        handles = [Line2D([0], [0], color=cmap(i % n_colors), lw=fiber_lw, label=f"F{i}")
-                   for i in range(max_fiber)]
-        handles.append(Line2D([0], [0], color=polymer_color, lw=1.4,
-                              alpha=min(1.0, polymer_alpha + 0.3), label="polymer"))
-        ax.legend(handles=handles, fontsize=7, ncol=max(1, (max_fiber + 1) // 8 + 1),
-                  loc="upper left", bbox_to_anchor=(1.02, 1.0))
+        ax.legend(handles=[
+            Line2D([0], [0], color=fiber_color, lw=1.6, label="fibre"),
+            Line2D([0], [0], color=polymer_color, lw=1.4,
+                   alpha=min(1.0, polymer_alpha + 0.3), label="polymer"),
+        ], loc="upper left", bbox_to_anchor=(1.02, 1.0))
     return fig
 
 
@@ -159,7 +151,7 @@ def plot_print_paths(result: dict, **kwargs):
 def plot_print_layers_plotly(
     layers: Sequence[dict],
     layer_height: float = 0.15,
-    fiber_cmap: str = "tab20",
+    fiber_color: str = "#ff7f0e",
     polymer_color: str = "#9fb6d4",
     fiber_width: float = 3.0,
     polymer_width: float = 1.5,
@@ -177,11 +169,6 @@ def plot_print_layers_plotly(
     Requires ``plotly`` (pre-installed on Colab; ``pip install plotly`` locally).
     """
     import plotly.graph_objects as go
-    import matplotlib.cm as cm
-    import matplotlib.colors as mcolors
-
-    cmap = cm.get_cmap(fiber_cmap)
-    n_colors = getattr(cmap, "N", 20)
 
     # In-plane bounds + true stacked height (coplanar layers add 0).
     xmin = ymin = onp.inf
@@ -213,11 +200,11 @@ def plot_print_layers_plotly(
                 x=n[:, 0], y=n[:, 1], z=onp.full(n.shape[0], z), mode="lines",
                 line=dict(color=polymer_color, width=polymer_width),
                 opacity=polymer_opacity, showlegend=False, hoverinfo="skip"))
-        for idx, p in enumerate(ld.get("fiber", [])):
+        for p in ld.get("fiber", []):
             n = onp.asarray(p.nodes)
             traces.append(go.Scatter3d(
                 x=n[:, 0], y=n[:, 1], z=onp.full(n.shape[0], z), mode="lines",
-                line=dict(color=mcolors.to_hex(cmap(idx % n_colors)), width=fiber_width),
+                line=dict(color=fiber_color, width=fiber_width),
                 showlegend=False, hoverinfo="skip"))
 
     z_plot = total_z * z_exaggeration
