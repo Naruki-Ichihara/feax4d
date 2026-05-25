@@ -260,6 +260,8 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
         w_target_arr = np.zeros(n_nodes)
     else:
         w_target_arr = np.asarray(cfg.target_fn(pts[:, 0], pts[:, 1]))
+    # Target *displacement* (n_nodes, 3): in-plane zero, transverse = w*.
+    u_target_arr = np.stack([np.zeros(n_nodes), np.zeros(n_nodes), w_target_arr], axis=1)
 
     # Pre-warm the linear solver with a shape-correct sample InternalVars.
     sample_iv = fe.InternalVars(
@@ -283,14 +285,14 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
     n_total = N_FIELDS * n_nodes
     x0 = initial_design(cfg, n_nodes)
 
-    # Normalisation: ‖w − w_target‖² of the initial design ⇒ objective ≈ 1.
+    # Normalisation: ‖u − u_target‖² (full displacement) of the initial design.
     design8_0, _, _ = process(np.array(x0))
     sol0 = solver(fe.InternalVars(volume_vars=design8_0, surface_vars=()), init_guess)
-    w0 = problem.unflatten_fn_sol_list(sol0)[0][:, 2]
-    denom = float(np.maximum(np.sum((w0 - w_target_arr) ** 2), 1e-30))
-    shape_match_fn = make_shape_match_fn(problem, w_target_arr, denom)
-    log(f"Init ‖w−w*‖_rms : "
-        f"{float(np.sqrt(np.mean((w0 - w_target_arr) ** 2))) * 1e3:.4f} mm")
+    uvw0 = problem.unflatten_fn_sol_list(sol0)[0]
+    denom = float(np.maximum(np.sum((uvw0 - u_target_arr) ** 2), 1e-30))
+    shape_match_fn = make_shape_match_fn(problem, u_target_arr, denom)
+    log(f"Init ‖u−u*‖_rms : "
+        f"{float(np.sqrt(np.mean(np.sum((uvw0 - u_target_arr) ** 2, axis=1)))) * 1e3:.4f} mm")
 
     sb = cfg.sgn_beta
 
@@ -336,18 +338,39 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
         sol_list = problem.unflatten_fn_sol_list(sol)
         uvw = onp.asarray(sol_list[0])
         rotation = onp.asarray(sol_list[1])
+        w = uvw[:, 2]
         w_target = onp.asarray(w_target_arr)
+        w_error = w - w_target
         a2_bot_vec = onp.column_stack([a2_0[:, 0, 0], a2_0[:, 1, 1], a2_0[:, 0, 1]])
         a2_top_vec = onp.column_stack([a2_1[:, 0, 0], a2_1[:, 1, 1], a2_1[:, 0, 1]])
+        zeros = onp.zeros_like(w)
+        # Target displacement (0,0,w*) and full displacement-error vector.
+        disp_target = onp.column_stack([zeros, zeros, w_target])
+        disp_error = uvw - disp_target                       # (u, v, w − w*)
+        disp_error_mag = onp.linalg.norm(disp_error, axis=1)  # ‖u − u*‖ (objective)
         return [
             ("density_bot", rho0_f), ("density_top", rho1_f),
             ("director_bot", d3_0), ("director_top", d3_1),
             ("a2_bot", a2_bot_vec), ("a2_top", a2_top_vec),
             ("displacement", uvw), ("rotation", rotation),
-            ("w_target", w_target), ("w_error", uvw[:, 2] - w_target),
+            ("w", w),                          # achieved transverse displacement
+            ("w_target", w_target),            # target transverse field
+            ("w_error", w_error),              # transverse error  w − w*
+            ("w_error_abs", onp.abs(w_error)),  # |transverse error|
+            ("displacement_target", disp_target),    # (0,0,w*) for warp-by-vector
+            ("displacement_error", disp_error),      # (u, v, w−w*) full disp error
+            ("displacement_error_mag", disp_error_mag),  # ‖u − u*‖ (objective field)
         ]
 
-    history = {"iter": [], "obj": [], "vol": [], "ud": [], "rho_pen": [], "mag": []}
+    history = {"iter": [], "obj": [], "vol": [], "ud": [], "rho_pen": [], "mag": [],
+               "rms_err_mm": [], "max_err_mm": []}
+
+    @jax.jit
+    def err_metrics(sol_flat):
+        """(rms, max) nodal displacement-error magnitude ‖u − u*‖ in metres."""
+        uvw = problem.unflatten_fn_sol_list(sol_flat)[0]
+        mag = np.sqrt(np.sum((uvw - u_target_arr) ** 2, axis=1))
+        return np.sqrt(np.mean(mag * mag)), np.max(mag)
     iter_count = [0]
     best = {"obj": float("inf"), "iter": 0}
 
@@ -359,9 +382,13 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
         if cfg.save_vtu:
             fe.utils.save_sol(mesh, str(vtu_dir / f"iter_{step:04d}.vtu"), point_infos=fields)
 
+    bc_src = ("bc_specs" if cfg.bc_specs is not None
+              else "bc_fn" if cfg.bc_fn is not None else f"clamp {cfg.clamp!r}")
     log(f"Design vars  : {n_total}  (8 fields × {n_nodes} nodes)")
-    log(f"Clamp / load : clamp={cfg.clamp!r}, load={cfg.load_mag:g} N/m, ΔT={cfg.delta_t} K")
-    log(f"Objective    : {'flat (stay-flat)' if cfg.target_fn is None else 'shape match'}")
+    log(f"BC / load    : {bc_src};  {len(load_loc_fns)} surface load region(s);  "
+        f"ΔT={cfg.delta_t} K")
+    log(f"Objective    : {'flat (stay-flat)' if cfg.target_fn is None else 'shape match'}"
+        f" (displacement error)")
     log(f"Convergence  : ftol_rel={cfg.ftol_rel:g}  xtol_rel={cfg.xtol_rel:g}  "
         f"xtol_abs={cfg.xtol_abs:g}  (max-iter cap = {cfg.max_iter})")
     log("-" * 60)
@@ -381,6 +408,9 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
                 grad[:] = onp.array(g)
             v = float(mean_density_jit(x_jax))
             val_f = float(val)
+            rms_e, max_e = err_metrics(sol)
+            rms_mm = float(rms_e) * 1e3
+            max_mm = float(max_e) * 1e3
             iter_count[0] += 1
             if val_f < best["obj"]:
                 best["obj"], best["iter"] = val_f, iter_count[0]
@@ -390,9 +420,12 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
             history["ud"].append(float(ud_val))
             history["rho_pen"].append(float(rho_val))
             history["mag"].append(float(mag_val))
+            history["rms_err_mm"].append(rms_mm)
+            history["max_err_mm"].append(max_mm)
             log(f"Iter {iter_count[0]:4d}: obj={val_f:.4e}  ρ̄={v:.4f}  "
                 f"P_UD={float(ud_val):.4f}  P_ρ={float(rho_val):.4f}  "
-                f"P_mag={float(mag_val):.4f}  best={best['obj']:.4e}")
+                f"P_mag={float(mag_val):.4f}  rms_err={rms_mm:.3f}mm  "
+                f"best={best['obj']:.4e}")
             if iter_count[0] % cfg.snapshot_every == 0:
                 fields = snapshot_fields(xx, sol=sol)
                 xw.write_iteration(iter_count[0], point_infos=fields)
@@ -444,11 +477,12 @@ def optimize(cfg: OptimizeConfig) -> OptimizeResult:
 
 def _write_history_csv(path, history):
     import csv
+    cols = ("iter", "obj", "vol", "ud", "rho_pen", "mag", "rms_err_mm", "max_err_mm")
     with open(path, "w", newline="") as f:
         w = csv.writer(f)
-        w.writerow(["iter", "obj", "vol", "ud", "rho_pen", "mag"])
+        w.writerow(cols)
         for i in range(len(history["iter"])):
-            w.writerow([history[k][i] for k in ("iter", "obj", "vol", "ud", "rho_pen", "mag")])
+            w.writerow([history[k][i] for k in cols])
 
 
 def _save_history_plot(path, history):
@@ -456,12 +490,17 @@ def _save_history_plot(path, history):
         import matplotlib.pyplot as plt
     except ImportError:
         return
-    fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+    fig, axes = plt.subplots(1, 3, figsize=(15, 4))
     axes[0].semilogy(history["iter"], history["obj"], "b-")
-    axes[0].set_xlabel("Iteration"); axes[0].set_ylabel("‖w − w*‖² / ‖·‖²_init")
-    axes[0].set_title("Objective"); axes[0].grid(True, alpha=0.3)
-    axes[1].plot(history["iter"], history["vol"], "g-")
-    axes[1].set_xlabel("Iteration"); axes[1].set_ylabel("Mean fibre fraction")
-    axes[1].set_title("Mean ρ (diagnostic)"); axes[1].set_ylim(0.0, 1.0)
-    axes[1].grid(True, alpha=0.3)
+    axes[0].set_xlabel("Iteration"); axes[0].set_ylabel("‖u − u*‖² / ‖·‖²_init")
+    axes[0].set_title("Objective (displacement error)"); axes[0].grid(True, alpha=0.3)
+    axes[1].semilogy(history["iter"], history.get("rms_err_mm", []), "r-", label="rms")
+    if history.get("max_err_mm"):
+        axes[1].semilogy(history["iter"], history["max_err_mm"], "r--", alpha=0.5, label="max")
+    axes[1].set_xlabel("Iteration"); axes[1].set_ylabel("error [mm]")
+    axes[1].set_title("Displacement error ‖u − u*‖"); axes[1].legend(); axes[1].grid(True, alpha=0.3)
+    axes[2].plot(history["iter"], history["vol"], "g-")
+    axes[2].set_xlabel("Iteration"); axes[2].set_ylabel("Mean fibre fraction")
+    axes[2].set_title("Mean ρ (diagnostic)"); axes[2].set_ylim(0.0, 1.0)
+    axes[2].grid(True, alpha=0.3)
     fig.tight_layout(); fig.savefig(path, dpi=150); plt.close(fig)

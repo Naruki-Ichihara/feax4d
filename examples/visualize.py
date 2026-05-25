@@ -33,11 +33,14 @@ def main():
         polymer_fill=True,
         infill_angle=[0.0, 90.0],
         infill_pitch=1.0,
-        layer_print_layers=[3, 3],     # 3 print laminae per design layer
+        layer_print_layers=[4, 4],     # 3 print laminae per design layer
         connection_threshold=10.0,
     )
 
-    fig = feax4d.plot_print_paths(result, elev=24, azim=-58)
+    # layer_gap = visual Z spacing between print layers (raise to spread them
+    # apart, lower to compress); show_ticks=False gives a clean view (no axis
+    # ticks/numbers — the default).
+    fig = feax4d.plot_print_paths(result, elev=20, azim=-58, layer_gap=8.0)
     out = fibre_dir / "print_paths_3d.png"
     fig.savefig(out, dpi=200, bbox_inches="tight")
     print(f"layers={result['n_layers']}  fibre toolpaths={result['n_fiber_paths']}  "

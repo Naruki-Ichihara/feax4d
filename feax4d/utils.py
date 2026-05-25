@@ -113,6 +113,8 @@ def save_result(result, config=None, out_dir=None, save_fields=True) -> Path:
         "final": {
             "obj": result.history["obj"][-1] if result.history["obj"] else None,
             "mean_density": result.history["vol"][-1] if result.history["vol"] else None,
+            "rms_err_mm": (result.history.get("rms_err_mm") or [None])[-1],
+            "max_err_mm": (result.history.get("max_err_mm") or [None])[-1],
         },
     }
     with open(out_dir / "result.json", "w") as f:

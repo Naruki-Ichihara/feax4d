@@ -1,10 +1,11 @@
 """Objective and regularisation terms for the bilayer shell optimisation.
 
 * :func:`make_shape_match_fn` — the primary objective: squared L2 distance
-  of the transverse displacement ``w`` from a target field, normalised by a
-  caller-supplied denominator.  A flat (``w_target ≡ 0``) target gives the
-  "stay-flat" load-compensation objective; a non-zero target gives shape
-  matching / form finding.
+  of the **full displacement** ``u = (u, v, w)`` from a target displacement
+  field ``u*`` (in-plane zero, transverse = target shape ``w*``), normalised by
+  a caller-supplied denominator.  A flat (``u* ≡ 0``) target gives the
+  "stay-flat" load-compensation objective; a non-zero transverse target gives
+  shape matching / form finding.
 
 * Three regularisers that push the design toward a clean manufacturable
   state, all returning O(1) scalars (see the libertas formulation):
@@ -20,20 +21,22 @@ import jax.numpy as np
 from feax.mechanics.orientation import orientation_tensor_2d
 
 
-def make_shape_match_fn(problem, w_target_flat, denom):
-    """Return ``J(sol) = ‖w − w_target‖² / denom`` (transverse only).
+def make_shape_match_fn(problem, u_target, denom):
+    """Return ``J(sol) = ‖u − u_target‖² / denom`` over the **full displacement**.
 
-    ``denom`` is supplied by the caller (e.g. ‖w_init‖² of the initial
-    design) so the objective is O(1); with ``w_target ≡ 0`` this is the
-    stay-flat objective ‖w‖² / denom.
+    ``u`` is variable 0 = ``(u, v, w)`` at every node and ``u_target`` is the
+    target displacement field, shape ``(n_nodes, 3)`` (in-plane components are
+    usually zero, the transverse component is the target shape ``w*``).  This is
+    the *displacement* error, not just the transverse deflection.  ``denom`` is
+    supplied by the caller (e.g. ‖u_init − u_target‖² of the initial design) so
+    the objective is O(1); with ``u_target ≡ 0`` it is the stay-flat objective.
     """
     denom = np.maximum(denom, 1e-30)
 
     @jax.jit
     def shape_match_fn(sol_flat):
-        sol_list = problem.unflatten_fn_sol_list(sol_flat)
-        w = sol_list[0][:, 2]
-        diff = w - w_target_flat
+        uvw = problem.unflatten_fn_sol_list(sol_flat)[0]   # (n_nodes, 3)
+        diff = uvw - u_target
         return np.sum(diff * diff) / denom
 
     return shape_match_fn

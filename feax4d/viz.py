@@ -22,16 +22,18 @@ def plot_print_layers(
     layers: Sequence[dict],
     layer_height: float = 0.15,
     fiber_color: str = "#ff7f0e",
-    polymer_color: str = "#9fb6d4",
+    polymer_color: str = "#2ca02c",
     fiber_lw: float = 0.6,
-    polymer_lw: float = 0.4,
-    polymer_alpha: float = 0.35,
+    polymer_lw: float = 0.35,
+    polymer_alpha: float = 0.6,
     z_exaggeration: Optional[float] = None,
+    layer_gap: Optional[float] = None,
     elev: float = 22.0,
     azim: float = -60.0,
     ax=None,
     title: Optional[str] = None,
     legend: bool = False,
+    show_ticks: bool = False,
 ):
     """Plot assembled print layers in 3D.
 
@@ -51,6 +53,12 @@ def plot_print_layers(
     z_exaggeration : float, optional
         Multiplier applied to Z for display.  ``None`` auto-scales so the stack
         height is ~30% of the in-plane span; ``1.0`` keeps true proportions.
+    layer_gap : float, optional
+        If given, the visual Z spacing (in plot units) between successive print
+        layers is fixed to this value (coplanar fibre/polymer share a level),
+        overriding ``z_exaggeration``.  Use it to spread the layers apart.
+    show_ticks : bool
+        Show axis tick marks and number labels (default False — a clean view).
     ax : mpl_toolkits.mplot3d.Axes3D, optional
         Existing 3D axes to draw into (a new figure is created otherwise).
 
@@ -91,14 +99,22 @@ def plot_print_layers(
         z_exaggeration = max(1.0, (0.3 * span) / total_z)
 
     n_fiber = n_poly = 0
-    z_cum = 0.0
+    z_cum = 0.0          # cumulative honoured layer height (z_exaggeration mode)
+    level = -1           # discrete level index (layer_gap mode)
+    z_max = 0.0
     for ld in layers:
         # Honor an explicit per-layer height (0.0 ⇒ coplanar with the previous
         # layer), matching the g-code generator's Z handling.
         lh = ld.get("layer_height")
         lh = layer_height if lh is None else lh
-        z_cum += lh
-        z = z_cum * z_exaggeration
+        if layer_gap is not None:
+            if lh > 0:
+                level += 1
+            z = max(level, 0) * layer_gap
+        else:
+            z_cum += lh
+            z = z_cum * z_exaggeration
+        z_max = max(z_max, z)
         # Polymer infill (faint, behind) first.
         for p in ld.get("contour", []):
             n = onp.asarray(p.nodes)
@@ -111,14 +127,19 @@ def plot_print_layers(
             ax.plot(n[:, 0], n[:, 1], z, color=fiber_color, lw=fiber_lw)
             n_fiber += 1
 
-    ax.set_xlabel("x [mm]"); ax.set_ylabel("y [mm]")
-    ax.set_zlabel(f"z [mm]  (×{z_exaggeration:.0f})" if z_exaggeration != 1.0 else "z [mm]")
     if title is None:
         title = (f"Print paths — {n_layers} layers "
                  f"({n_fiber} fibre, {n_poly} polymer toolpaths)")
     ax.set_title(title)
     ax.view_init(elev=elev, azim=azim)
-    ax.set_box_aspect((xmax - xmin, ymax - ymin, max(total_z * z_exaggeration, 1e-9)))
+    ax.set_box_aspect((xmax - xmin, ymax - ymin, max(z_max, 1e-9)))
+    if show_ticks:
+        ax.set_xlabel("x [mm]"); ax.set_ylabel("y [mm]"); ax.set_zlabel("z")
+    else:
+        # Clean view: no tick marks, no number labels, no grid.
+        ax.set_xticks([]); ax.set_yticks([]); ax.set_zticks([])
+        ax.set_xlabel(""); ax.set_ylabel(""); ax.set_zlabel("")
+        ax.grid(False)
 
     if legend:
         from matplotlib.lines import Line2D
@@ -152,13 +173,15 @@ def plot_print_layers_plotly(
     layers: Sequence[dict],
     layer_height: float = 0.15,
     fiber_color: str = "#ff7f0e",
-    polymer_color: str = "#9fb6d4",
+    polymer_color: str = "#2ca02c",
     fiber_width: float = 3.0,
-    polymer_width: float = 1.5,
-    polymer_opacity: float = 0.25,
+    polymer_width: float = 1.2,
+    polymer_opacity: float = 0.6,
     z_exaggeration: Optional[float] = None,
+    layer_gap: Optional[float] = None,
     height: int = 650,
     title: Optional[str] = None,
+    show_ticks: bool = False,
 ):
     """Interactive 3D print-path view as a **plotly** figure (mouse-rotatable).
 
@@ -189,11 +212,19 @@ def plot_print_layers_plotly(
 
     traces = []
     z_cum = 0.0
+    level = -1
+    z_max = 0.0
     for ld in layers:
         lh = ld.get("layer_height")
         lh = layer_height if lh is None else lh
-        z_cum += lh
-        z = z_cum * z_exaggeration
+        if layer_gap is not None:
+            if lh > 0:
+                level += 1
+            z = max(level, 0) * layer_gap
+        else:
+            z_cum += lh
+            z = z_cum * z_exaggeration
+        z_max = max(z_max, z)
         for p in ld.get("contour", []):
             n = onp.asarray(p.nodes)
             traces.append(go.Scatter3d(
@@ -207,15 +238,19 @@ def plot_print_layers_plotly(
                 line=dict(color=fiber_color, width=fiber_width),
                 showlegend=False, hoverinfo="skip"))
 
-    z_plot = total_z * z_exaggeration
+    z_plot = max(z_max, 1e-9)
     m = max(xmax - xmin, ymax - ymin, z_plot, 1e-9)
+    # Clean axes by default: hide tick numbers, ticks and grid.
+    ax_kw = {} if show_ticks else dict(
+        showticklabels=False, ticks="", showgrid=False, zeroline=False, title="")
     fig = go.Figure(traces)
     fig.update_layout(
         height=height, title=title or "Print paths (drag to rotate)",
         margin=dict(l=0, r=0, t=30, b=0),
         scene=dict(
-            xaxis_title="x [mm]", yaxis_title="y [mm]",
-            zaxis_title=f"z [mm] (×{z_exaggeration:.0f})",
+            xaxis=dict(**({"title": "x [mm]"} if show_ticks else {}), **ax_kw),
+            yaxis=dict(**({"title": "y [mm]"} if show_ticks else {}), **ax_kw),
+            zaxis=dict(**({"title": "z"} if show_ticks else {}), **ax_kw),
             aspectmode="manual",
             aspectratio=dict(x=(xmax - xmin) / m, y=(ymax - ymin) / m, z=z_plot / m),
         ),

@@ -23,12 +23,11 @@ def main():
     params.layer_height = 0.15                    # mm
 
     result = feax4d.fibre_paths_to_gcode(
-        fibre_dir,                                # collects fibre_paths_layer*.svg in order
         params=params,
         polymer_fill=True,                        # fill every layer's footprint with polymer
         infill_angle=[0.0, 90.0],                 # per-layer polymer scan direction
         infill_pitch=1.0,                         # polymer line spacing [mm]
-        connection_threshold=10.0,                # merge fibre path ends within 10 mm
+        connection_threshold=3,                # merge fibre path ends within 10 mm
     )
     print("\nG-code:", result["gcode_path"])
     print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "

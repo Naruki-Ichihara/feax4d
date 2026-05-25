@@ -25,6 +25,7 @@ dependencies = [
     "matplotlib",
     "shapely",        # polymer infill region/scanline generation (fibrifier)
     "tsp-solver2",    # TSP path ordering for fibre/infill toolpaths (fibrifier)
+    "svgpathtools",   # parse/discretise <path> SVG curves + test-path generation
 ]
 
 [project.optional-dependencies]

@@ -1,9 +1,10 @@
 """Stable-plate optimisation, built explicitly with the general feax4d API.
 
 A rectangular cantilever (span : width = 2 : 1) is fully clamped on its right
-edge and carries a uniform downward line load on the free (left) edge.  The
-optimiser tailors the bilayer density + fibre orientation so the cooling-
-induced thermal warping cancels the deflection and the plate stays flat.
+edge and carries an **asymmetric** transverse line load on the free (left)
+edge — the load ramps linearly across the width.  The optimiser tailors the
+bilayer density + fibre orientation so the cooling-induced thermal warping
+cancels the deflection and the plate stays flat.
 
 This is the same physical problem as the convenience defaults, but the mesh,
 boundary conditions and load are supplied explicitly — swap them to solve a
@@ -36,14 +37,24 @@ def main():
         fe.DirichletBCSpec(location=right, component="all", value=0.0, variable_index=1),
     ]
 
-    # ── Load: uniform transverse line load on the free (left) edge (5 N/m, −z) ──
-    load_fn = feax4d.uniform_transverse_load(5.0)
+    # ── Load: *asymmetric* transverse line load on the free (left) edge ──
+    # The line load ramps linearly across the width: 0 at y = 0 (bottom) to
+    # 2·LOAD_MEAN at y = Ly (top), mean = LOAD_MEAN.  This breaks the symmetry
+    # about the centreline, so the optimiser must design an asymmetric bilayer
+    # to keep the plate flat.  (Sign convention: feax residual += t = −t_phys,
+    # so a positive tz here is a downward physical load, as in
+    # ``uniform_transverse_load``.)
+    LOAD_MEAN = 5.0   # N/m (width-averaged)
+
+    def asymmetric_load(vals, x, *iv):
+        tz = LOAD_MEAN * 2.0 * x[1] / Ly
+        return [jnp.array([0.0, 0.0, tz]), jnp.zeros(2)]
 
     cfg = feax4d.OptimizeConfig(
         mesh=mesh,
         bc_specs=bc_specs,
         load_location_fns=(left,),
-        surface_load_fns=[load_fn],
+        surface_load_fns=[asymmetric_load],
         filter_rho_radius=0.05 * Lx,        # absolute filter radii (m)
         filter_theta_radius=0.05 * Lx,
         delta_t=-150.0,                     # K, one-shot cooling

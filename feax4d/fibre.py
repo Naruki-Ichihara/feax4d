@@ -215,32 +215,64 @@ def _bilinear_interp_struct(field, pts_new, x_min, x_max, y_min, y_max, Nx_orig,
 
 
 def extract_fibre_paths(u_grid, mask_grid, x_min, x_max, y_min, y_max,
-                        contour_level=0.0, min_path_length=2.0e-3):
+                        contour_level=0.0, min_path_length=2.0e-3,
+                        boundary_erode=1):
     """Extract fibre-path polylines from the zero-level contours of ``u``.
 
     ``u_grid`` / ``mask_grid`` are (Ny+1, Nx+1) [y, x] grids.  Returns a list
     of ``(n_pts, 2)`` polylines in physical (x, y) [m].
+
+    The masked field uses a large sentinel outside the fibre region so the
+    contour finder ignores the void.  That sentinel, however, makes a zero
+    contour run **along the fibre/void boundary**, which would link separate
+    stripes into one boundary-hugging curve.  To prevent that, each contour is
+    confined to the fibre **interior** (the mask eroded by ``boundary_erode``
+    cells) and split into separate segments wherever it leaves the interior —
+    so stripes are cut at the boundary and never connect along it.
     """
     from skimage import measure
+    from scipy.ndimage import binary_erosion
 
+    solid = onp.asarray(mask_grid) > 0.5
     u_clip = onp.asarray(u_grid).copy()
-    u_clip[mask_grid <= 0.5] = 1e10   # sentinel outside the mask → no isoline
+    u_clip[~solid] = 1e10   # sentinel outside the mask → no isoline in the void
     contours = measure.find_contours(u_clip, level=contour_level)
+
+    interior = (binary_erosion(solid, iterations=int(boundary_erode))
+                if boundary_erode > 0 else solid)
 
     Ny_p1, Nx_p1 = u_clip.shape
     Lx, Ly = x_max - x_min, y_max - y_min
+
+    def _emit(run, paths):
+        if run.shape[0] < 2:
+            return
+        x = x_min + (run[:, 1] / (Nx_p1 - 1)) * Lx
+        y = y_min + (run[:, 0] / (Ny_p1 - 1)) * Ly
+        seg = onp.column_stack([x, y])
+        if min_path_length > 0 and \
+           onp.linalg.norm(seg[1:] - seg[:-1], axis=1).sum() < min_path_length:
+            return
+        paths.append(seg)
+
     paths = []
     for c in contours:
         if c.shape[0] < 2:
             continue
-        # find_contours returns (row, col) = (y_index, x_index).
-        x = x_min + (c[:, 1] / (Nx_p1 - 1)) * Lx
-        y = y_min + (c[:, 0] / (Ny_p1 - 1)) * Ly
-        seg = onp.column_stack([x, y])
-        if min_path_length > 0:
-            if onp.linalg.norm(seg[1:] - seg[:-1], axis=1).sum() < min_path_length:
-                continue
-        paths.append(seg)
+        # Keep only contour vertices that sit in the eroded interior; split the
+        # contour into maximal interior runs (drops boundary-hugging parts).
+        ri = onp.clip(onp.round(c[:, 0]).astype(int), 0, Ny_p1 - 1)
+        ci = onp.clip(onp.round(c[:, 1]).astype(int), 0, Nx_p1 - 1)
+        inside = interior[ri, ci]
+        start = None
+        for k, ins in enumerate(inside):
+            if ins and start is None:
+                start = k
+            elif not ins and start is not None:
+                _emit(c[start:k], paths)
+                start = None
+        if start is not None:
+            _emit(c[start:], paths)
     return paths
 
 
@@ -331,6 +363,7 @@ def generate_fibre_paths(
     rho_cutoff=0.5,
     refine_factor=4,
     min_path_length=2.0e-3,
+    boundary_erode=1,
     svg_stroke_mm=0.3,
     layers=(0, 1),
     verbose=True,
@@ -419,7 +452,8 @@ def generate_fibre_paths(
                          layer, suffix, x_min, x_max, y_min, y_max, L_X, L_Y, log)
 
         paths = extract_fibre_paths(u_grid, mask_grid, x_min, x_max, y_min, y_max,
-                                    contour_level=0.0, min_path_length=min_path_length)
+                                    contour_level=0.0, min_path_length=min_path_length,
+                                    boundary_erode=boundary_erode)
         total_len = sum(onp.linalg.norm(p[1:] - p[:-1], axis=1).sum() for p in paths)
         log(f"  Extracted {len(paths)} fibre paths "
             f"({sum(p.shape[0] for p in paths)} pts, total length {total_len*1e3:.0f} mm)")

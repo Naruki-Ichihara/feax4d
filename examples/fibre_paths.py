@@ -30,24 +30,6 @@ def main():
     )
     fibre_dir = history.parent / "fibre_paths"
 
-    # 2) Fibrifier G-code: polymer infill (P) per layer + fibres (F).
-    params = feax4d.FibrifierParams()
-    params.temperature.bed_temperature = 90       # °C
-    params.layer_height = 0.15                     # mm
-    result = feax4d.fibre_paths_to_gcode(
-        fibre_dir,
-        params=params,
-        polymer_fill=True,                         # fill non-fibre regions with polymer
-        infill_angle=[0.0, 90.0],                  # per-layer polymer scan direction
-        infill_pitch=1.0,                          # polymer line spacing [mm]
-        layer_print_layers=[3, 3],                 # print laminae per design layer (thickness)
-        connection_threshold=10.0,                 # merge fibre path ends within 10 mm
-    )
-    print("\nG-code:", result["gcode_path"])
-    print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "
-          f"polymer paths={result.get('n_polymer_paths')}  "
-          f"total fibre={result['total_fiber_mm']:.0f} mm")
-
 
 if __name__ == "__main__":
     main()

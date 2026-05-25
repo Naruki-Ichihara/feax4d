@@ -53,8 +53,21 @@ def load_and_prepare_paths(
 
     layer = Layer(layer_id=0, paths=stripe_paths)
     travel = layer.optimize_open_path_order(start_point=start_point)
-    stripe_paths = [p for p in layer.paths if not p.is_closed]
-    print(f"  TSP travel distance: {travel:.2f} mm  ({len(stripe_paths)} open paths)")
+    # Keep open paths as-is; instead of *discarding* closed stripe contours
+    # (loops that don't touch the mask boundary — e.g. curved/concentric
+    # stripes), cut them open at the first node so they still become fibre
+    # paths.  Dropping them left whole fibre regions with no toolpath.
+    stripe_paths = []
+    n_opened = 0
+    for p in layer.paths:
+        if not p.is_closed:
+            stripe_paths.append(p)
+        elif len(p.nodes) >= 4:
+            stripe_paths.append(Path(path_id=p.path_id, nodes=list(p.nodes[:-1]),
+                                     path_type=p.path_type))
+            n_opened += 1
+    print(f"  TSP travel distance: {travel:.2f} mm  "
+          f"({len(stripe_paths)} paths, {n_opened} closed loops opened)")
 
     connected = _connect_adjacent_paths(stripe_paths, connection_threshold)
     print(f"  After connection (threshold={connection_threshold} mm): {len(connected)} paths")
@@ -98,48 +111,87 @@ def _segments_cross(seg_a, seg_b):
     return 0.01 < t < 0.99 and 0.01 < u < 0.99
 
 
-def _connection_crosses_path(existing_nodes, new_start):
+def _seg_crosses_polyline(seg, nodes, lo=0, hi=None):
+    """True if ``seg`` properly crosses any segment ``nodes[i]→nodes[i+1]``
+    for ``lo <= i < hi`` (``hi`` defaults to the last segment)."""
+    if hi is None:
+        hi = len(nodes) - 1
+    for i in range(lo, hi):
+        if _segments_cross(seg, (nodes[i], nodes[i + 1])):
+            return True
+    return False
+
+
+def _polylines_intersect(A, B):
+    """True if any segment of polyline ``A`` properly crosses one of ``B``.
+
+    Vectorised (numpy) over ``B`` for each segment of the shorter polyline,
+    using the same strict interior test (0.01, 0.99) as ``_segments_cross`` so
+    shared endpoints are not flagged.
     """
-    Check if the connection line (existing_nodes[-1] → new_start)
-    crosses any segment of the existing merged path.
-    """
-    if len(existing_nodes) < 2:
+    A = np.asarray(A, dtype=float)
+    B = np.asarray(B, dtype=float)
+    if len(A) < 2 or len(B) < 2:
         return False
-    conn = (existing_nodes[-1], new_start)
-    # Check against all segments in existing path (skip last 2 to avoid
-    # false positive with adjacent segments)
-    for i in range(len(existing_nodes) - 3):
-        seg = (existing_nodes[i], existing_nodes[i + 1])
-        if _segments_cross(conn, seg):
+    if len(A) > len(B):            # loop over the shorter one
+        A, B = B, A
+    q = B[:-1]
+    s = B[1:] - B[:-1]
+    sx, sy, qx, qy = s[:, 0], s[:, 1], q[:, 0], q[:, 1]
+    for i in range(len(A) - 1):
+        p = A[i]
+        r = A[i + 1] - A[i]
+        denom = r[0] * sy - r[1] * sx
+        wx = qx - p[0]
+        wy = qy - p[1]
+        with np.errstate(divide="ignore", invalid="ignore"):
+            t = (wx * sy - wy * sx) / denom
+            u = (wx * r[1] - wy * r[0]) / denom
+        hit = (np.abs(denom) > 1e-12) & (t > 0.01) & (t < 0.99) & (u > 0.01) & (u < 0.99)
+        if bool(hit.any()):
             return True
     return False
 
 
 def _connect_adjacent_paths(paths, threshold):
-    """
-    Connect consecutive paths whose endpoints are within threshold,
-    but only if the connecting segment does not cross existing path segments.
+    """Greedily chain paths whose endpoints are within ``threshold``.
+
+    A candidate is attached at whichever of its two ends is nearer the current
+    tail (reversing it if needed, which shortens the jump and avoids many
+    crossings).  A join is accepted only if the connecting segment crosses
+    **neither** the already-built path **nor** the candidate's own body — this
+    prevents self-intersections within a single fibre path.  Adjacent segments
+    that merely share the join endpoint are not flagged (the crossing test is
+    strict interior), so we only exclude the one segment touching each end.
     """
     if not paths:
         return []
     merged = []
-    current_nodes = list(paths[0].nodes)
+    current = list(paths[0].nodes)
 
     for i in range(1, len(paths)):
-        curr = paths[i]
-        dx = curr.start_point[0] - current_nodes[-1][0]
-        dy = curr.start_point[1] - current_nodes[-1][1]
-        dist = math.sqrt(dx * dx + dy * dy)
-
-        if dist <= threshold and not _connection_crosses_path(current_nodes, curr.start_point):
-            # Safe to connect
-            current_nodes.extend(curr.nodes)
+        cand = list(paths[i].nodes)
+        tail = current[-1]
+        d_start = math.hypot(cand[0][0] - tail[0], cand[0][1] - tail[1])
+        d_end = math.hypot(cand[-1][0] - tail[0], cand[-1][1] - tail[1])
+        if d_end < d_start:            # attach the nearer end → reverse candidate
+            cand = cand[::-1]
+            dist = d_end
         else:
-            # Break: emit current path and start new one
-            merged.append(Path(path_id=len(merged), nodes=current_nodes, path_type="stripe"))
-            current_nodes = list(curr.nodes)
+            dist = d_start
 
-    merged.append(Path(path_id=len(merged), nodes=current_nodes, path_type="stripe"))
+        conn = (tail, cand[0])
+        crosses = (
+            _seg_crosses_polyline(conn, current, lo=0, hi=len(current) - 2)
+            or _seg_crosses_polyline(conn, cand, lo=1)
+        )
+        if dist <= threshold and not crosses:
+            current.extend(cand)
+        else:
+            merged.append(Path(path_id=len(merged), nodes=current, path_type="stripe"))
+            current = cand
+
+    merged.append(Path(path_id=len(merged), nodes=current, path_type="stripe"))
     return merged
 
 
@@ -536,6 +588,9 @@ class FibrifierFiberParams:
     anchoring_height: int = 3               # Z-lift for anchoring approach (mm)
     anchoring_length: int = 2               # Anchoring contact length (mm)
     fiber_width: float = 1.5                # Fiber width (mm)
+    fiber_cut: bool = True                  # insert a fibre cut at the end of each
+                                            # stretch; False = print continuously
+                                            # (no cutting, full-length extrusion)
 
 
 @dataclass
@@ -899,12 +954,15 @@ class FibrifierGcodeGenerator:
         self.retract_length = p.retraction.retract_length
         self.retract_speed = p.retraction.retract_speed
         self.min_length = p.fiber.minimal_printable_length
+        self.fiber_cut = p.fiber.fiber_cut
 
         # Derived
         self.after_cut_feed = int(self.after_cut_speed / 100.0 * self.cf_feed)
 
         # Global stretch counter
         self._stretch_counter = 0
+        # Whether any fibre stretch has been laid yet (continuous-fibre mode).
+        self._fiber_started = False
 
     def _tx(self, x):
         return x + self.offset_x
@@ -926,6 +984,7 @@ class FibrifierGcodeGenerator:
         Alternating P/F layers like the reference: P, F, P, F, ...
         """
         self._stretch_counter = 0
+        self._fiber_started = False
 
         with open(filename, "w") as f:
             # Compute bounding box in machine coords
@@ -1244,8 +1303,16 @@ class FibrifierGcodeGenerator:
         """Write a full fiber layer."""
         f.write(f"G0 Z{z:.4f} ; to next layer transition\n")
 
-        # Polymer→Fiber transition
-        self._write_polymer_to_fiber_init(f, z)
+        # Polymer→Fiber transition (tool change T1→T0) only when coming from a
+        # non-fibre layer.  Consecutive fibre layers stay on the fibre guide
+        # (T0) — no redundant tool change / polymer-nozzle cooldown.
+        if layer_idx > 0:
+            prev = all_layers[layer_idx - 1]
+            prev_type = prev.get("type") or ("F" if prev.get("fiber") else "P")
+        else:
+            prev_type = None
+        if prev_type != "F":
+            self._write_polymer_to_fiber_init(f, z)
 
         n_passes = len(fiber_paths)
         for pidx, fp in enumerate(fiber_paths):
@@ -1289,8 +1356,13 @@ class FibrifierGcodeGenerator:
         f.write(f"; - START OF Fiber STRETCH #{stretch_id} -\n")
         f.write(f";------------------------\n")
 
-        # Compute cut position
-        cut_idx, cut_point = _find_cut_index(nodes, self.nozzle_dead_length)
+        # Compute cut position.  With fibre cutting disabled, set the cut index
+        # past the end so the loop never cuts and the whole path is extruded
+        # (continuous fibre, no severing between stretches).
+        if self.fiber_cut:
+            cut_idx, cut_point = _find_cut_index(nodes, self.nozzle_dead_length)
+        else:
+            cut_idx, cut_point = n, None
 
         # Compute smoothed direction angles
         angles = _compute_smooth_angles(nodes)
@@ -1300,18 +1372,30 @@ class FibrifierGcodeGenerator:
             nodes[0][0], nodes[0][1], nodes[1][0], nodes[1][1])
         anchor = _anchor_point(nodes, self.nozzle_dead_length)
 
-        # Move to anchor position with correct nozzle orientation
-        f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
-        f.write(f"G0 X{self._tx(anchor[0]):.4f} Y{self._ty(anchor[1]):.4f} "
-                f"Z{z + self.anchor_height:.4f} W{raw_start_angle:.4f} "
-                f"F{self.rapid_feed} ;move to anchoring start\n")
-        f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
-        f.write(f"G0 E23.5000 F{self.cf_feed}\n")
+        if (not self.fiber_cut) and self._fiber_started:
+            # Continuous fibre: the tow is uncut from the previous stretch, so
+            # don't re-anchor — just climb to this layer at the start point
+            # (raising Z by one layer at the same X/Y when stretches are ordered
+            # end-to-start), then keep extruding.
+            f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
+            f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
+                    f"Z{z:.4f} W{raw_start_angle:.4f} F{self.cf_feed} "
+                    f";continuous fibre — climb to next layer\n")
+            f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
+        else:
+            # Move to anchor position with correct nozzle orientation
+            f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
+            f.write(f"G0 X{self._tx(anchor[0]):.4f} Y{self._ty(anchor[1]):.4f} "
+                    f"Z{z + self.anchor_height:.4f} W{raw_start_angle:.4f} "
+                    f"F{self.rapid_feed} ;move to anchoring start\n")
+            f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
+            f.write(f"G0 E23.5000 F{self.cf_feed}\n")
 
-        # Move to start
-        f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
-                f"Z{z:.4f} F{self.cf_feed}\n")
-        f.write(f"G4 P{self.anchor_dwell} ;anchoring dwell\n")
+            # Move to start
+            f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
+                    f"Z{z:.4f} F{self.cf_feed}\n")
+            f.write(f"G4 P{self.anchor_dwell} ;anchoring dwell\n")
+        self._fiber_started = True
 
         # Lay fiber with rotation and extrusion
         # Track absolute nozzle angle to correctly handle turns
@@ -1389,16 +1473,17 @@ class FibrifierGcodeGenerator:
 
             prev = (x, y)
 
-        if not cut_emitted:
-            f.write(f"cut_filament\n")
+        if self.fiber_cut:
+            if not cut_emitted:
+                f.write(f"cut_filament\n")
 
-        # Sum of skipped extrusion comment (matches reference)
-        f.write(f"; sum of skipped extrusion after the cut: {self.nozzle_dead_length}\n")
+            # Sum of skipped extrusion comment (matches reference)
+            f.write(f"; sum of skipped extrusion after the cut: {self.nozzle_dead_length}\n")
 
-        # Ironing out move
-        iron = _ironing_point(nodes, self.no_speed_up_length)
-        f.write(f"G0 X{self._tx(iron[0]):.4f} Y{self._ty(iron[1]):.4f} "
-                f"Z{z:.4f} W0.0000 F{self.after_cut_feed} ;Ironing out move\n")
+            # Ironing out move
+            iron = _ironing_point(nodes, self.no_speed_up_length)
+            f.write(f"G0 X{self._tx(iron[0]):.4f} Y{self._ty(iron[1]):.4f} "
+                    f"Z{z:.4f} W0.0000 F{self.after_cut_feed} ;Ironing out move\n")
 
         f.write(f";------------------------\n")
         f.write(f"; - END OF Fiber STRETCH #{stretch_id} -\n")

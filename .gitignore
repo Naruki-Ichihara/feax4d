@@ -1,0 +1,25 @@
+# ── Python ──
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+build/
+dist/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ── Generated outputs (optimisation / fibre-path / g-code runs) ──
+output_*/
+**/output_*/
+*.gcode
+
+# ── Generated report artifacts (keep the .md source) ──
+reports/*.pdf
+reports/*.tex
+reports/*.aux
+reports/*.log
+reports/*.out
+reports/*.toc
+
+# ── OS / misc ──
+.DS_Store

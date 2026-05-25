@@ -115,8 +115,12 @@ def svg_to_gcode_polymer_fill(
     infill_pitch: float = 0.8,
     infill_inset: float = 0.3,
     layer_print_layers: Union[int, Sequence[int]] = 1,
+    polymer_base_layers: int = 0,
+    polymer_top_layers: int = 0,
+    polymer_in_fiber_layers: bool = True,
     cross_hatch: bool = True,
     coplanar: bool = True,
+    fiber_cut: Optional[bool] = None,
     connection_threshold: float = 5.0,
     min_fiber_length: float = 23.73,
     smooth_sigma: float = 3.0,
@@ -157,6 +161,8 @@ def svg_to_gcode_polymer_fill(
         params.offset_y = offset_y
     if layer_height is not None:
         params.layer_height = layer_height
+    if fiber_cut is not None:
+        params.fiber.fiber_cut = fiber_cut
 
     import matplotlib.pyplot as plt
 
@@ -182,16 +188,45 @@ def svg_to_gcode_polymer_fill(
             return _generate_infill_paths(contour, angle, infill_pitch, infill_inset), "density-limited"
         return _polymer_infill_for_svg(svg, angle, infill_pitch, infill_inset), "footprint"
 
-    layers = []
-    all_fiber, all_contour = [], []
-    preview_paths = []
-    for i, svg in enumerate(svg_paths):
-        print(f"\n=== SVG {i + 1}: {svg} ===")
+    # Continuous fibre (no cut) → order the stacked laminae end-to-start by
+    # reversing every other lamina, so the climb between layers happens at the
+    # same X/Y (a clean Z step) rather than a diagonal jump.
+    continuous = not params.fiber.fiber_cut
+
+    def _reverse_fibre(paths):
+        return [_FibrePath(path_id=p.path_id, nodes=list(reversed(p.nodes)),
+                           path_type=p.path_type) for p in reversed(paths)]
+
+    # Pre-load every SVG once (fibre + polymer contour).
+    loaded = []
+    for svg in svg_paths:
         fiber, contour, _svg_h = _load_and_prepare_paths(
             svg_path=svg, connection_threshold=connection_threshold,
             min_fiber_length=min_fiber_length, flip_y=flip_y,
             smooth_sigma=smooth_sigma, decimate_epsilon=decimate_epsilon,
         )
+        loaded.append((svg, fiber, contour))
+
+    layers = []
+    all_fiber, all_contour = [], []
+    preview_paths = []
+
+    def _add_polymer_only(svg, contour, base_angle, count):
+        """Append ``count`` polymer-only print layers (no fibre) over a region."""
+        for k in range(count):
+            ang = base_angle + (90.0 * k if cross_hatch else 0.0)
+            infill, _ = _infill_at(contour, svg, ang)
+            layers.append({"fiber": [], "contour": infill, "type": "P"})
+            all_contour.extend(infill)
+
+    # ── Bottom polymer-only cap (uses the first design layer's region) ──
+    if polymer_base_layers > 0:
+        _add_polymer_only(loaded[0][0], loaded[0][2], angles[0], polymer_base_layers)
+        print(f"  Base: {polymer_base_layers} polymer-only layer(s)")
+
+    # ── Fibre stack ──
+    for i, (svg, fiber, contour) in enumerate(loaded):
+        print(f"\n=== SVG {i + 1}: {svg} ===")
         base_angle = angles[i % len(angles)]
         n_i = max(1, counts[i % len(counts)])
 
@@ -201,21 +236,26 @@ def svg_to_gcode_polymer_fill(
         first_infill = None
         region = "footprint"
         for r in range(n_i):
-            ang = base_angle + (90.0 * r if cross_hatch else 0.0)
-            infill, region = _infill_at(contour, svg, ang)
-            layers.append({"fiber": [], "contour": infill, "type": "P"})
-            all_contour.extend(infill)
-            if first_infill is None:
-                first_infill = infill
+            # Polymer in this lamina: always when the layer has no fibre, and
+            # when ``polymer_in_fiber_layers`` for fibre layers (else the fibre
+            # layers are fibre-only — polymer lives only in the cap layers).
+            add_polymer = polymer_in_fiber_layers or not fiber
+            if add_polymer:
+                ang = base_angle + (90.0 * r if cross_hatch else 0.0)
+                infill, region = _infill_at(contour, svg, ang)
+                layers.append({"fiber": [], "contour": infill, "type": "P"})
+                all_contour.extend(infill)
+                if first_infill is None:
+                    first_infill = infill
             if fiber:
-                # coplanar ⇒ fibre shares the polymer matrix's Z (layer_height
-                # 0 advance), since the density-limited polymer and the fibre
-                # tile complementary in-plane regions of the same lamina.
-                f_layer = {"fiber": fiber, "contour": [], "type": "F"}
-                if coplanar:
+                # When paired with a coplanar polymer layer, the fibre shares
+                # its Z (layer_height 0); a fibre-only layer advances Z itself.
+                fib = _reverse_fibre(fiber) if (continuous and r % 2 == 1) else fiber
+                f_layer = {"fiber": fib, "contour": [], "type": "F"}
+                if add_polymer and coplanar:
                     f_layer["layer_height"] = 0.0
                 layers.append(f_layer)
-                all_fiber.extend(fiber)
+                all_fiber.extend(fib)
         print(f"  Layer {i}: {n_i} printed lamina(e) × "
               f"[polymer{' + fibre' if fiber else ''}] "
               f"({region}, base {base_angle}°, {len(fiber)} fibre paths/lamina)")
@@ -230,6 +270,12 @@ def svg_to_gcode_polymer_fill(
         plt.close(fig)
         preview_paths.append(pv)
         print(f"  Preview saved to {pv}")
+
+    # ── Top polymer-only cap (uses the last design layer's region) ──
+    if polymer_top_layers > 0:
+        _add_polymer_only(loaded[-1][0], loaded[-1][2],
+                          angles[(len(loaded) - 1) % len(angles)], polymer_top_layers)
+        print(f"  Top: {polymer_top_layers} polymer-only layer(s)")
 
     gen = FibrifierGcodeGenerator(params=params)
     gen.generate_multilayer(layers, filename=output_gcode)
@@ -261,8 +307,12 @@ def fibre_paths_to_gcode(
     infill_pitch: float = 0.8,
     infill_inset: float = 0.3,
     layer_print_layers: Union[int, Sequence[int]] = 1,
+    polymer_base_layers: int = 0,
+    polymer_top_layers: int = 0,
+    polymer_in_fiber_layers: bool = True,
     cross_hatch: bool = True,
     coplanar: bool = True,
+    fiber_cut: Optional[bool] = None,
     skip_empty: Optional[bool] = None,
     **kwargs,
 ):
@@ -294,8 +344,21 @@ def fibre_paths_to_gcode(
         Design layer ``i`` is stacked ``n_i`` times, keeping the part a true
         bilayer; mechanically consistent with re-optimising at
         ``T_LAYER_i = n_i * layer_height``.
+    polymer_base_layers, polymer_top_layers : int
+        Number of pure-polymer (no fibre) cap layers below / above the fibre
+        stack — e.g. ``2`` + ``layer_print_layers=10`` + ``2`` gives a
+        2-polymer / 10-fibre / 2-polymer sandwich.
+    polymer_in_fiber_layers : bool
+        If True (default), each fibre layer also carries coplanar polymer
+        infill in its non-fibre region.  Set False for **fibre-only** fibre
+        layers (polymer only in the cap layers) — fewer polymer layers.
     cross_hatch : bool
         Rotate the polymer infill +90° between successive laminae of a layer.
+    fiber_cut : bool, optional
+        Insert a fibre cut at the end of each fibre stretch (default, ``True``).
+        ``False`` prints the fibre continuously — no severing, the whole path is
+        extruded (no nozzle-dead-length pull-through or ironing-out move).
+        Overrides ``params.fiber.fiber_cut`` when given.
     coplanar : bool
         If True (default), the fibre of each lamina shares the **same Z** as
         its polymer matrix (they tile complementary in-plane regions, so the
@@ -344,7 +407,9 @@ def fibre_paths_to_gcode(
             svgs, output_gcode=output_gcode, params=params,
             infill_angle=infill_angle, infill_pitch=infill_pitch,
             infill_inset=infill_inset, layer_print_layers=layer_print_layers,
-            cross_hatch=cross_hatch, coplanar=coplanar, **kwargs,
+            polymer_base_layers=polymer_base_layers, polymer_top_layers=polymer_top_layers,
+            polymer_in_fiber_layers=polymer_in_fiber_layers,
+            cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
 
