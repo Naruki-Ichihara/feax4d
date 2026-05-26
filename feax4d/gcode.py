@@ -118,6 +118,8 @@ def svg_to_gcode_polymer_fill(
     polymer_base_layers: int = 0,
     polymer_top_layers: int = 0,
     polymer_in_fiber_layers: bool = True,
+    fiber_layer_height: Optional[float] = None,
+    polymer_layer_height: Optional[float] = None,
     cross_hatch: bool = True,
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
@@ -197,6 +199,11 @@ def svg_to_gcode_polymer_fill(
         return [_FibrePath(path_id=p.path_id, nodes=list(reversed(p.nodes)),
                            path_type=p.path_type) for p in reversed(paths)]
 
+    # Per-layer-type print thickness (Z increment).  Polymer (cap / matrix)
+    # layers and fibre layers can differ; both default to params.layer_height.
+    lh_poly = params.layer_height if polymer_layer_height is None else polymer_layer_height
+    lh_fib = params.layer_height if fiber_layer_height is None else fiber_layer_height
+
     # Pre-load every SVG once (fibre + polymer contour).
     loaded = []
     for svg in svg_paths:
@@ -216,7 +223,8 @@ def svg_to_gcode_polymer_fill(
         for k in range(count):
             ang = base_angle + (90.0 * k if cross_hatch else 0.0)
             infill, _ = _infill_at(contour, svg, ang)
-            layers.append({"fiber": [], "contour": infill, "type": "P"})
+            layers.append({"fiber": [], "contour": infill, "type": "P",
+                           "layer_height": lh_poly})
             all_contour.extend(infill)
 
     # ── Bottom polymer-only cap (uses the first design layer's region) ──
@@ -240,10 +248,14 @@ def svg_to_gcode_polymer_fill(
             # when ``polymer_in_fiber_layers`` for fibre layers (else the fibre
             # layers are fibre-only — polymer lives only in the cap layers).
             add_polymer = polymer_in_fiber_layers or not fiber
+            # This lamina's Z thickness: fibre laminae use lh_fib, pure-polymer
+            # laminae use lh_poly.
+            lamina_h = lh_fib if fiber else lh_poly
             if add_polymer:
                 ang = base_angle + (90.0 * r if cross_hatch else 0.0)
                 infill, region = _infill_at(contour, svg, ang)
-                layers.append({"fiber": [], "contour": infill, "type": "P"})
+                layers.append({"fiber": [], "contour": infill, "type": "P",
+                               "layer_height": lamina_h})
                 all_contour.extend(infill)
                 if first_infill is None:
                     first_infill = infill
@@ -251,9 +263,8 @@ def svg_to_gcode_polymer_fill(
                 # When paired with a coplanar polymer layer, the fibre shares
                 # its Z (layer_height 0); a fibre-only layer advances Z itself.
                 fib = _reverse_fibre(fiber) if (continuous and r % 2 == 1) else fiber
-                f_layer = {"fiber": fib, "contour": [], "type": "F"}
-                if add_polymer and coplanar:
-                    f_layer["layer_height"] = 0.0
+                f_layer = {"fiber": fib, "contour": [], "type": "F",
+                           "layer_height": 0.0 if (add_polymer and coplanar) else lamina_h}
                 layers.append(f_layer)
                 all_fiber.extend(fib)
         print(f"  Layer {i}: {n_i} printed lamina(e) × "
@@ -310,6 +321,8 @@ def fibre_paths_to_gcode(
     polymer_base_layers: int = 0,
     polymer_top_layers: int = 0,
     polymer_in_fiber_layers: bool = True,
+    fiber_layer_height: Optional[float] = None,
+    polymer_layer_height: Optional[float] = None,
     cross_hatch: bool = True,
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
@@ -352,6 +365,10 @@ def fibre_paths_to_gcode(
         If True (default), each fibre layer also carries coplanar polymer
         infill in its non-fibre region.  Set False for **fibre-only** fibre
         layers (polymer only in the cap layers) — fewer polymer layers.
+    fiber_layer_height, polymer_layer_height : float, optional
+        Per-type print-layer thickness (Z increment) for fibre layers and for
+        polymer (cap / matrix) layers.  Each defaults to ``params.layer_height``;
+        set them to give fibre and polymer layers different thicknesses.
     cross_hatch : bool
         Rotate the polymer infill +90° between successive laminae of a layer.
     fiber_cut : bool, optional
@@ -409,6 +426,7 @@ def fibre_paths_to_gcode(
             infill_inset=infill_inset, layer_print_layers=layer_print_layers,
             polymer_base_layers=polymer_base_layers, polymer_top_layers=polymer_top_layers,
             polymer_in_fiber_layers=polymer_in_fiber_layers,
+            fiber_layer_height=fiber_layer_height, polymer_layer_height=polymer_layer_height,
             cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
