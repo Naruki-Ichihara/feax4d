@@ -577,10 +577,22 @@ class FibrifierSpeedParams:
 
 @dataclass
 class FibrifierExtrusionParams:
-    """Extrusion settings for Fibrifier printing."""
-    cf_extrusion_multiplier: float = 0.99   # Fiber extrusion multiplier (E = dist * this)
-    pl_extrusion_multiplier: float = 0.68   # Polymer extrusion multiplier
-    first_layer_extrusion_multiplier: float = 1.0  # First layer multiplier
+    """Extrusion settings for Fibrifier printing.
+
+    Polymer extrusion is **volumetric**: the relative filament advance for a
+    move of length L is ``E = L * h * w / (pi/4 * filament_diameter**2) *
+    pl_extrusion_multiplier`` (h = layer height, w = polymer line width), so it
+    scales correctly with layer thickness and line width.  ``pl_extrusion_-
+    multiplier`` is therefore a dimensionless **flow** factor (≈ 1.0).
+
+    Fibre extrusion stays length-based (``E = L * cf_extrusion_multiplier``):
+    the continuous tow is fed ~1:1 with the path length, not extruded by volume.
+    """
+    cf_extrusion_multiplier: float = 0.99   # fibre tow feed factor (E = dist * this)
+    pl_extrusion_multiplier: float = 1.0    # polymer flow factor (volumetric)
+    filament_diameter: float = 1.75         # polymer filament diameter [mm]
+    polymer_line_width: float = 0.5         # polymer extruded bead width [mm]
+    first_layer_extrusion_multiplier: float = 1.0  # (reserved) first-layer flow
 
 
 @dataclass
@@ -941,6 +953,9 @@ class FibrifierGcodeGenerator:
         self.layer_height = p.layer_height
 
         self.cf_em = p.extrusion.cf_extrusion_multiplier
+        self.pl_flow = p.extrusion.pl_extrusion_multiplier
+        self.filament_d = p.extrusion.filament_diameter
+        self.polymer_line_width = p.extrusion.polymer_line_width
         self.cf_feed = p.speed.cf_print_feedrate
         self.pl_em = p.extrusion.pl_extrusion_multiplier
         self.pl_temp = p.temperature.pl_print_temp
@@ -978,6 +993,15 @@ class FibrifierGcodeGenerator:
 
     def _ty(self, y):
         return y + self.offset_y
+
+    def _polymer_e(self, dist, layer_h):
+        """Volumetric polymer extrusion E for a move of length ``dist``.
+
+        ``E = dist * h * w / (pi/4 * d_filament**2) * flow`` — the filament
+        length whose volume equals the deposited bead (height h, width w).
+        """
+        area = (math.pi / 4.0) * self.filament_d ** 2
+        return dist * layer_h * self.polymer_line_width / area * self.pl_flow
 
     def _next_stretch(self):
         idx = self._stretch_counter
@@ -1033,7 +1057,7 @@ class FibrifierGcodeGenerator:
                 f.write(f";========================\n")
 
                 if layer_type == "P":
-                    self._write_polymer_layer(f, z, layer_idx, contour_paths, layers)
+                    self._write_polymer_layer(f, z, layer_idx, contour_paths, layers, lh)
                 elif layer_type == "F":
                     self._write_fiber_layer(f, z, layer_idx, fiber_paths, layers)
 
@@ -1194,8 +1218,11 @@ class FibrifierGcodeGenerator:
 
     # ── Polymer layer ───────────────────────────────────────
 
-    def _write_polymer_layer(self, f, z, layer_idx, contour_paths, all_layers):
+    def _write_polymer_layer(self, f, z, layer_idx, contour_paths, all_layers,
+                             layer_h=None):
         """Write a full polymer layer (perimeters + infill)."""
+        if layer_h is None:
+            layer_h = self.layer_height
 
         # If previous layer was fiber, do Fiber→Polymer transition
         if layer_idx > 0:
@@ -1242,7 +1269,7 @@ class FibrifierGcodeGenerator:
                 dy = ny - prev[1]
                 dist = math.sqrt(dx * dx + dy * dy)
                 if dist > 1e-5:
-                    e_val = dist * self.pl_em
+                    e_val = self._polymer_e(dist, layer_h)
                     f.write(f"G1 X{self._tx(nx):.4f} Y{self._ty(ny):.4f} "
                             f"E{e_val:.4f} ; perimeter\n")
                 prev = (nx, ny)
@@ -1279,7 +1306,7 @@ class FibrifierGcodeGenerator:
                 dy = ny - prev[1]
                 dist = math.sqrt(dx * dx + dy * dy)
                 if dist > 1e-5:
-                    e_val = dist * self.pl_em
+                    e_val = self._polymer_e(dist, layer_h)
                     label = "infill" if is_scan else "infill step"
                     f.write(f"G1 X{self._tx(nx):.4f} Y{self._ty(ny):.4f} "
                             f"E{e_val:.4f} ; {label}\n")
