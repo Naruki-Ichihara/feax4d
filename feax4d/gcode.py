@@ -34,6 +34,7 @@ from feax4d.fibrifier.path import Path as _FibrePath
 from feax4d.fibrifier.fibrifier_gcode import (
     load_and_prepare_paths as _load_and_prepare_paths,
     generate_infill_paths as _generate_infill_paths,
+    _build_infill_region,
     plot_paths as _plot_paths,
 )
 
@@ -107,6 +108,31 @@ def _polymer_infill_for_svg(svg_path, angle_deg, pitch, inset):
     return _generate_infill_paths([contour], angle_deg, pitch, inset)
 
 
+def _perimeter_loops(region_contours, n, first_inset, pitch):
+    """``n`` closed perimeter (wall) loops of a polymer region, inset inward.
+
+    Loop ``k`` is the region boundary buffered inward by ``first_inset + k*pitch``
+    (exterior + any hole boundaries).  Returned as closed ``contour`` Paths so
+    the g-code writer prints them as polymer perimeters.
+    """
+    region = _build_infill_region(region_contours, inset=0.0)
+    if region is None:
+        return []
+    loops = []
+    for k in range(n):
+        r = region.buffer(-(first_inset + k * pitch))
+        if r.is_empty:
+            break
+        geoms = list(r.geoms) if hasattr(r, "geoms") else [r]
+        for g in geoms:
+            for ring in [g.exterior, *g.interiors]:
+                coords = [(float(x), float(y)) for x, y in ring.coords]
+                if len(coords) >= 4:
+                    loops.append(_FibrePath(path_id=len(loops), nodes=coords,
+                                            path_type="contour"))
+    return loops
+
+
 def svg_to_gcode_polymer_fill(
     svg_paths: Sequence[Union[str, _Path]],
     output_gcode: str = "output_fibrifier.gcode",
@@ -120,6 +146,8 @@ def svg_to_gcode_polymer_fill(
     polymer_in_fiber_layers: bool = True,
     fiber_layer_height: Optional[float] = None,
     polymer_layer_height: Optional[float] = None,
+    polymer_perimeters: int = 0,
+    polymer_perimeter_pitch: float = 0.5,
     cross_hatch: bool = True,
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
@@ -185,10 +213,24 @@ def svg_to_gcode_polymer_fill(
         return str(pv_base.with_name(f"{_Path(svg).stem}_preview.png"))
 
     def _infill_at(contour, svg, angle):
-        """Polymer infill at one angle: density contour if present, else footprint."""
+        """Polymer paths at one angle: optional perimeter wall loops + infill.
+
+        Density contour if present, else the plate footprint.  With
+        ``polymer_perimeters > 0`` the region boundary is added as closed
+        perimeter loops and the infill is inset inside them.
+        """
+        region_tag = "density-limited" if contour else "footprint"
+        inset = infill_inset + polymer_perimeters * polymer_perimeter_pitch
         if contour:
-            return _generate_infill_paths(contour, angle, infill_pitch, infill_inset), "density-limited"
-        return _polymer_infill_for_svg(svg, angle, infill_pitch, infill_inset), "footprint"
+            infill = _generate_infill_paths(contour, angle, infill_pitch, inset)
+        else:
+            infill = _polymer_infill_for_svg(svg, angle, infill_pitch, inset)
+        if polymer_perimeters > 0:
+            region_contours = contour if contour else [_footprint_contour(svg)]
+            loops = _perimeter_loops(region_contours, polymer_perimeters,
+                                     infill_inset, polymer_perimeter_pitch)
+            return loops + infill, region_tag
+        return infill, region_tag
 
     # Continuous fibre (no cut) → order the stacked laminae end-to-start by
     # reversing every other lamina, so the climb between layers happens at the
@@ -323,6 +365,8 @@ def fibre_paths_to_gcode(
     polymer_in_fiber_layers: bool = True,
     fiber_layer_height: Optional[float] = None,
     polymer_layer_height: Optional[float] = None,
+    polymer_perimeters: int = 0,
+    polymer_perimeter_pitch: float = 0.5,
     cross_hatch: bool = True,
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
@@ -369,6 +413,12 @@ def fibre_paths_to_gcode(
         Per-type print-layer thickness (Z increment) for fibre layers and for
         polymer (cap / matrix) layers.  Each defaults to ``params.layer_height``;
         set them to give fibre and polymer layers different thicknesses.
+    polymer_perimeters : int
+        Number of perimeter (wall) loops printed around the polymer region on
+        every polymer layer (0 = infill only, the default).  Loops are inset
+        inward by ``polymer_perimeter_pitch`` and the infill sits inside them.
+    polymer_perimeter_pitch : float
+        Spacing between successive perimeter loops [mm].
     cross_hatch : bool
         Rotate the polymer infill +90° between successive laminae of a layer.
     fiber_cut : bool, optional
@@ -427,6 +477,8 @@ def fibre_paths_to_gcode(
             polymer_base_layers=polymer_base_layers, polymer_top_layers=polymer_top_layers,
             polymer_in_fiber_layers=polymer_in_fiber_layers,
             fiber_layer_height=fiber_layer_height, polymer_layer_height=polymer_layer_height,
+            polymer_perimeters=polymer_perimeters,
+            polymer_perimeter_pitch=polymer_perimeter_pitch,
             cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)

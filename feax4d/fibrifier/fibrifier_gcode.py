@@ -568,6 +568,11 @@ class FibrifierSpeedParams:
     after_cut_speed: int = 75           # Post-cut speed as % of cf_print_feedrate
     rapid_move_feedrate: int = 5500     # Rapid travel feedrate (mm/min)
     pl_first_layer_speed: int = 30      # Polymer first layer speed factor
+    # Polymer feedrates (mm/min) — used directly per layer.
+    pl_perimeter_feedrate: int = 2400   # polymer perimeter (non-first layers)
+    pl_infill_feedrate: int = 3600      # polymer infill (non-first layers)
+    pl_first_layer_feedrate: int = 1800 # polymer perimeter & infill, slow layers
+    pl_first_layers: int = 1            # number of initial layers printed slow
 
 
 @dataclass
@@ -948,6 +953,10 @@ class FibrifierGcodeGenerator:
         self.no_speed_up_length = p.fiber.no_speed_up_length
         self.rapid_feed = p.speed.rapid_move_feedrate
         self.perimeter_speed = p.speed.perimeter_speed
+        self.pl_perimeter_feed = p.speed.pl_perimeter_feedrate
+        self.pl_infill_feed = p.speed.pl_infill_feedrate
+        self.pl_first_layer_feed = p.speed.pl_first_layer_feedrate
+        self.pl_first_layers = p.speed.pl_first_layers
         self.bed_temp = p.temperature.bed_temperature
         self.chamber_temp = p.temperature.build_chamber_temperature
         self.material_temp = p.temperature.material_storage_temperature
@@ -1195,8 +1204,11 @@ class FibrifierGcodeGenerator:
                 self._write_fiber_to_polymer_init(f, z)
 
         is_first = (layer_idx == 0)
-        perimeter_f = 1800 if is_first else 2400
-        infill_f = 1800 if is_first else 3600
+        # "Slow" feedrate for the first ``pl_first_layers`` layers (e.g. set to
+        # 2 so the 2nd layer is also slowed); faster feedrates afterwards.
+        slow = layer_idx < self.pl_first_layers
+        perimeter_f = self.pl_first_layer_feed if slow else self.pl_perimeter_feed
+        infill_f = self.pl_first_layer_feed if slow else self.pl_infill_feed
         z_lift = z + 0.35 if is_first else z
 
         # Separate perimeters (closed contours) from infill paths (open zig-zag)
