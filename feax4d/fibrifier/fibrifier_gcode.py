@@ -608,6 +608,12 @@ class FibrifierFiberParams:
     fiber_cut: bool = True                  # insert a fibre cut at the end of each
                                             # stretch; False = print continuously
                                             # (no cutting, full-length extrusion)
+    # Manual-cut mode (only when fiber_cut is False): at the end of each fibre
+    # layer, raise the nozzle in place while dispensing fibre, then pause so the
+    # operator can cut the tow by hand and resume.
+    manual_cut: bool = False
+    manual_cut_lift: float = 20.0           # Z lift during the pause [mm]
+    manual_cut_extrude: float = 20.0        # fibre dispensed during the lift [mm]
 
 
 @dataclass
@@ -979,6 +985,9 @@ class FibrifierGcodeGenerator:
         self.retract_speed = p.retraction.retract_speed
         self.min_length = p.fiber.minimal_printable_length
         self.fiber_cut = p.fiber.fiber_cut
+        self.manual_cut = p.fiber.manual_cut
+        self.manual_cut_lift = p.fiber.manual_cut_lift
+        self.manual_cut_extrude = p.fiber.manual_cut_extrude
 
         # Derived
         self.after_cut_feed = int(self.after_cut_speed / 100.0 * self.cf_feed)
@@ -1366,6 +1375,25 @@ class FibrifierGcodeGenerator:
                 preheat_polymer=(next_layer_type == "P"),
                 is_last_fiber_layer_pass=(pidx >= n_passes - 2),
             )
+
+        # Manual-cut mode: end the fibre layer by lifting the nozzle in place
+        # (dispensing fibre so a tail hangs out), then pause for the operator to
+        # cut the tow by hand and resume.  The severed tow means the next fibre
+        # layer must re-anchor, so clear the continuous-fibre flag.
+        if self.manual_cut and not self.fiber_cut:
+            self._write_manual_cut_pause(f, z)
+            self._fiber_started = False
+
+    def _write_manual_cut_pause(self, f, z):
+        """Lift the nozzle while extruding fibre, then pause for a hand cut."""
+        f.write(";------------------------\n")
+        f.write("; - MANUAL FIBRE CUT (lift + pause) -\n")
+        f.write(";------------------------\n")
+        f.write("G91 ; relative coordinates\n")
+        f.write(f"G1 Z{self.manual_cut_lift:.4f} E{self.manual_cut_extrude:.4f} "
+                f"F{self.cf_feed} ; raise nozzle while dispensing fibre\n")
+        f.write("G90 ; absolute coordinates\n")
+        f.write("M0 ; PAUSE — cut the fibre by hand, then press resume\n")
 
     def _write_polymer_to_fiber_init(self, f, z):
         """Polymer→Fiber transition (matches Fibrifier format exactly)."""

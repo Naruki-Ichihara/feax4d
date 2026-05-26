@@ -43,7 +43,9 @@ def main():
     params.fiber.fiber_width = 1.5                   # mm
     params.fiber.minimal_printable_length = 23.73    # mm
     params.fiber.nozzle_dead_length = 21.5           # mm
-    # (params.fiber.fiber_cut is overridden by the fiber_cut= kwarg below)
+    # manual-cut pause between fibre layers (lift + dispense, then pause)
+    params.fiber.manual_cut_lift = 20.0              # mm
+    params.fiber.manual_cut_extrude = 20.0           # mm of fibre dispensed during the lift
 
     # SVG -> polymer-filled Fibrifier g-code.
     result = feax4d.fibre_paths_to_gcode(
@@ -58,8 +60,9 @@ def main():
         polymer_top_layers=2,     # 2 polymer-only top layers
         polymer_in_fiber_layers=False,  # fibre-only middle layers (polymer only in caps)
         connection_threshold=4.0,
-        fiber_cut=False,          # continuous fibre — no cutting; climb Z between
-                                  # fibre layers at the same point (reversed laminae)
+        fiber_cut=False,          # no machine cutter
+        manual_fiber_cut=True,    # lift nozzle (dispensing) + pause for a hand cut
+                                  # between fibre layers, then re-anchor
     )
     print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "
           f"polymer paths={result['n_polymer_paths']}  "
