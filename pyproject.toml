@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "feax4d"
-version = "0.1.0"
+version = "0.2.0"
 description = "4D-printing design toolkit: bilayer thermal shell topology optimisation + aligned-SH fibre-path generation, built on feax."
 readme = "README.md"
 requires-python = ">=3.9"
