@@ -18,8 +18,13 @@ def main():
     svg = out_dir / "fibre_paths_layer0.svg"
 
     # 100 x 50 mm rectangle; straight fibres along the long (100 mm) axis,
-    # spaced 4 mm across the 50 mm width.
-    feax4d.make_test_fibre_svg(svg, width=100.0, height=50.0, pitch=2.0, kind="snake")
+    # spaced 4 mm across the 50 mm width.  ``outward_offset`` extends each
+    # fibre pass past both ends of the rectangle by N mm (handy for anchoring
+    # / hand-cutting the tow outside the part); 0 = flush with the edges.
+    feax4d.make_test_fibre_svg(
+        svg, width=100.0, height=50.0, pitch=2.0, kind="snake",
+        outward_offset=3.0,
+    )
     print(f"wrote {svg}")
 
     # ── Print parameters (edit these here) ──
@@ -63,10 +68,27 @@ def main():
         fiber_cut=False,          # no machine cutter
         manual_fiber_cut=True,    # lift nozzle (dispensing) + pause for a hand cut
                                   # between fibre layers, then re-anchor
+        skip_mesh_leveling=True,  # omit G29 mesh-bed-leveling at start of print
+        # ── Fibre hairpin (~180°) adhesion dwell ──
+        # After a 180° turn the nozzle travels uturn_dwell_offset mm along the
+        # new direction, then halts in place for uturn_dwell_time seconds
+        # (G4 S<sec>) so the freshly-laid tow bonds to the underlying material
+        # before continuing.  Both > 0 to enable; either = 0 disables.
+        uturn_dwell_offset=0.0,       # mm past the turn before dwelling
+        uturn_dwell_time=0.0,         # seconds to dwell in place
+        uturn_angle_threshold=150.0,  # deg — cumulative |Δheading| above this
+                                      # over the detection window counts as a hairpin
+        uturn_detection_window=6.0,   # mm — rolling window for the heading-change sum
     )
     print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "
           f"polymer paths={result['n_polymer_paths']}  "
           f"total fibre={result['total_fiber_mm']:.0f} mm")
+
+    # Sanity check — confirm the optional features actually landed in the g-code.
+    gcode_text = (out_dir / "verify.gcode").read_text()
+    print(f"M0 pauses={gcode_text.count(chr(10) + 'M0 ')}  "
+          f"G29 lines={sum(1 for ln in gcode_text.splitlines() if ln.startswith('G29'))}  "
+          f"U-turn dwells={gcode_text.count('u-turn adhesion dwell')}")
 
     # 3D print-path view.
     fig = feax4d.plot_print_paths(result, elev=22, azim=-60, layer_gap=6.0)

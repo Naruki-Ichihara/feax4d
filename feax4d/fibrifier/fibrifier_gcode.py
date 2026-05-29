@@ -615,6 +615,23 @@ class FibrifierFiberParams:
     manual_cut_lift: float = 20.0           # Z lift during the pause [mm]
     manual_cut_extrude: float = 20.0        # fibre dispensed during the lift [mm]
 
+    # Hairpin (~180°) U-turn adhesion dwell.  After the rotary turn, the nozzle
+    # continues along the path for ``uturn_dwell_offset`` mm and then halts in
+    # place for ``uturn_dwell_time`` seconds (a G4 wall-time dwell), giving the
+    # freshly-laid tow time to bond to the underlying layer before continuing.
+    # Both knobs > 0 to enable; either at 0 disables the feature.
+    uturn_dwell_offset: float = 0.0         # mm travelled past the turn before dwelling
+    uturn_dwell_time: float = 0.0           # seconds to dwell in place (G4 S<time>)
+    uturn_angle_threshold: float = 150.0    # deg — |cumulative Δheading| above this
+                                            # over the detection window counts as a
+                                            # 180° hairpin (only fibre, not polymer)
+    uturn_detection_window: float = 6.0     # mm — rolling window over which the
+                                            # heading-change sum is taken; smoothing
+                                            # / decimation spreads sharp corners over
+                                            # several short segments, so a per-segment
+                                            # check misses them — the cumulative sum
+                                            # over this window catches them
+
 
 @dataclass
 class FibrifierRetractionParams:
@@ -993,6 +1010,10 @@ class FibrifierGcodeGenerator:
         self.manual_cut = p.fiber.manual_cut
         self.manual_cut_lift = p.fiber.manual_cut_lift
         self.manual_cut_extrude = p.fiber.manual_cut_extrude
+        self.uturn_dwell_offset = p.fiber.uturn_dwell_offset
+        self.uturn_dwell_time = p.fiber.uturn_dwell_time
+        self.uturn_angle_threshold = p.fiber.uturn_angle_threshold
+        self.uturn_detection_window = p.fiber.uturn_detection_window
 
         # Derived
         self.after_cut_feed = int(self.after_cut_speed / 100.0 * self.cf_feed)
@@ -1480,6 +1501,19 @@ class FibrifierGcodeGenerator:
         # Threshold for in-place turn (degrees)
         IN_PLACE_TURN_THRESHOLD = 30.0
 
+        # Hairpin / U-turn adhesion dwell — see FibrifierFiberParams.
+        uturn_dwell_enabled = (self.uturn_dwell_offset > 0.0
+                                and self.uturn_dwell_time > 0.0)
+        # dist_after_uturn: mm travelled since the most recent qualifying U-turn,
+        # or None when no dwell is pending.
+        dist_after_uturn = None
+        # turn_window: rolling list of (segment_length, heading_change) for the
+        # most recent <= uturn_detection_window mm of EXTRUDED path.  Sharp
+        # corners get chamfered by smoothing/decimation into several short
+        # segments, each below threshold; the cumulative sum over this window
+        # is what flags a hairpin.
+        turn_window = []
+
         # Compute cumulative distance from end for preheat scheduling
         dist_from_end = _cumulative_distances_from_end(nodes)
 
@@ -1518,6 +1552,41 @@ class FibrifierGcodeGenerator:
             w_delta = _wrap_angle(target_angle - current_abs_angle)
             past_cut = cut_emitted
 
+            # Hairpin detection (extruded segments only — pull-through doesn't
+            # need adhesion).  Sum heading-changes over the rolling window plus
+            # *this* segment's change: if the cumulative |Δheading| crosses the
+            # threshold, we've just exited a hairpin and arm the post-turn
+            # distance counter.  The check happens before adding this segment to
+            # the window so that long post-turn segments don't trim away the
+            # corner-history we need.
+            if (uturn_dwell_enabled and not past_cut
+                    and dist_after_uturn is None):
+                cum_dtheta = sum(a for _, a in turn_window) + w_delta
+                if abs(cum_dtheta) > self.uturn_angle_threshold:
+                    dist_after_uturn = 0.0
+                    turn_window = []   # reset so we don't re-trigger on the tail
+            # Update the rolling window with this segment, then trim from the
+            # front so the total length stays <= uturn_detection_window mm.
+            # (Keep at least one entry — a single segment longer than the window
+            # is fine; it contributes its own heading change.)
+            if uturn_dwell_enabled and not past_cut:
+                turn_window.append((dist, w_delta))
+                total_len = sum(d for d, _ in turn_window)
+                while (len(turn_window) > 1
+                       and total_len > self.uturn_detection_window):
+                    total_len -= turn_window.pop(0)[0]
+
+            # Will this segment cross the dwell offset?  If so, split it at the
+            # exact point so the G4 dwell lands `uturn_dwell_offset` mm past
+            # the turn (not whatever the next node happens to be).
+            split_pt = None
+            if (dist_after_uturn is not None) and (not past_cut):
+                remaining = self.uturn_dwell_offset - dist_after_uturn
+                if 0.0 < remaining <= dist:
+                    frac = remaining / dist
+                    split_pt = (prev[0] + frac * dx, prev[1] + frac * dy,
+                                remaining)
+
             if past_cut:
                 # After cut: no extrusion, follow path for pull-through
                 # Use in-place turn if needed, then move with W=0
@@ -1527,6 +1596,31 @@ class FibrifierGcodeGenerator:
                 f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
                         f"Z{z:.4f} W0.0000 "
                         f"F{self.after_cut_feed}\n")
+            elif split_pt is not None:
+                # Before cut, dwell-splitting this segment.  Apply the turn (in
+                # place or rolled into the first sub-move) just as the unsplit
+                # path does, then emit: G1 → G4 → G1 (continuation, no rotation).
+                sx, sy, d1 = split_pt
+                d2 = dist - d1
+                e1 = d1 * self.cf_em
+                e2 = d2 * self.cf_em
+                if abs(w_delta) > IN_PLACE_TURN_THRESHOLD:
+                    f.write(f"G1 W{w_delta:.4f} ;in place turn\n")
+                    current_abs_angle = target_angle
+                    f.write(f"G1 X{self._tx(sx):.4f} Y{self._ty(sy):.4f} "
+                            f"Z{z:.4f} W0.0000 E{e1:.4f} F{self.cf_feed}\n")
+                else:
+                    w_cmd = f" W{w_delta:.4f}" if abs(w_delta) > 0.01 else ""
+                    f.write(f"G1 X{self._tx(sx):.4f} Y{self._ty(sy):.4f} "
+                            f"Z{z:.4f} E{e1:.4f}{w_cmd} F{self.cf_feed}\n")
+                    current_abs_angle = target_angle
+                f.write(f"G4 S{self.uturn_dwell_time:.4f} "
+                        f";u-turn adhesion dwell ({self.uturn_dwell_offset:.2f}mm "
+                        f"past 180° turn)\n")
+                if d2 > 1e-5:
+                    f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
+                            f"Z{z:.4f} E{e2:.4f} F{self.cf_feed}\n")
+                dist_after_uturn = None    # dwell consumed
             else:
                 # Before cut: extrude with rotation
                 if abs(w_delta) > IN_PLACE_TURN_THRESHOLD:
@@ -1544,6 +1638,9 @@ class FibrifierGcodeGenerator:
                     f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
                             f"Z{z:.4f} E{e_val:.4f}{w_cmd} F{self.cf_feed}\n")
                     current_abs_angle = target_angle
+                # Accumulate distance toward a still-pending dwell.
+                if dist_after_uturn is not None:
+                    dist_after_uturn += dist
 
             prev = (x, y)
 

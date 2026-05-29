@@ -23,6 +23,7 @@ def make_test_fibre_svg(
     amplitude: float = 6.0,
     with_contour: bool = True,
     stroke_mm: float = 0.3,
+    outward_offset: float = 0.0,
 ):
     """Write a simple analytic fibre-path SVG using svgpathtools.
 
@@ -45,9 +46,16 @@ def make_test_fibre_svg(
         snakes back and forth along the long axis (a single fibre).
     with_contour : bool
         Also emit a rectangular ``id="contour"`` polymer region (the full
-        footprint).
+        footprint).  The contour always covers the **original** ``W × H``
+        rectangle — only the fibre paths overshoot when ``outward_offset > 0``.
     stroke_mm : float
         SVG stroke width.
+    outward_offset : float
+        Extend each fibre pass outward along the long axis by this amount [mm]
+        at **both** ends (so a long-axis pass spans
+        ``[-outward_offset, L + outward_offset]``).  ``0`` (the default) keeps
+        the fibres flush with the rectangle.  Useful for anchoring or
+        hand-cutting the tow outside the polymer footprint.
 
     Returns
     -------
@@ -60,16 +68,20 @@ def make_test_fibre_svg(
     long_is_x = W >= H
     L, S = max(W, H), min(W, H)              # long, short extents
     n = max(1, int(round(S / pitch)))
+    ext = float(outward_offset)              # long-axis overshoot at each end
 
     def _offset(i):
         return (i + 0.5) * S / n            # position across the short axis
 
     def _ends(s, forward):
-        """(start, end) of the long-axis traverse at offset ``s``."""
+        """(start, end) of the long-axis traverse at offset ``s``.
+
+        Extends ``ext`` past both ends of the rectangle along the long axis.
+        """
         if long_is_x:
-            lo, hi = complex(0.0, s), complex(L, s)
+            lo, hi = complex(-ext, s), complex(L + ext, s)
         else:
-            lo, hi = complex(s, 0.0), complex(s, L)
+            lo, hi = complex(s, -ext), complex(s, L + ext)
         return (lo, hi) if forward else (hi, lo)
 
     if kind == "snake":
@@ -107,10 +119,16 @@ def make_test_fibre_svg(
         )
         contour_d.append(rect.d())
 
+    # ViewBox grows along the long axis by ``ext`` on each end so the
+    # outward-offset overshoot is rendered (the contour stays at W × H).
+    if long_is_x:
+        vb_x, vb_y, vb_w, vb_h = -ext, 0.0, W + 2 * ext, H
+    else:
+        vb_x, vb_y, vb_w, vb_h = 0.0, -ext, W, H + 2 * ext
     lines = [
         '<?xml version="1.0" encoding="UTF-8" standalone="no"?>',
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}mm" height="{H}mm" '
-        f'viewBox="0 0 {W} {H}">',
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{vb_w}mm" height="{vb_h}mm" '
+        f'viewBox="{vb_x} {vb_y} {vb_w} {vb_h}">',
         f'  <desc>test fibre paths ({kind}, {n} along long axis) — feax4d.make_test_fibre_svg</desc>',
         f'  <g id="fibre_paths" fill="none" stroke="#000000" stroke-width="{stroke_mm}">',
     ]

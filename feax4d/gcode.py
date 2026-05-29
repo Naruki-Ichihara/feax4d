@@ -153,6 +153,10 @@ def svg_to_gcode_polymer_fill(
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
+    uturn_dwell_offset: Optional[float] = None,
+    uturn_dwell_time: Optional[float] = None,
+    uturn_angle_threshold: Optional[float] = None,
+    uturn_detection_window: Optional[float] = None,
     connection_threshold: float = 5.0,
     min_fiber_length: float = 23.73,
     smooth_sigma: float = 3.0,
@@ -199,6 +203,14 @@ def svg_to_gcode_polymer_fill(
         params.fiber.manual_cut = manual_fiber_cut
     if skip_mesh_leveling is not None:
         params.skip_mesh_leveling = skip_mesh_leveling
+    if uturn_dwell_offset is not None:
+        params.fiber.uturn_dwell_offset = uturn_dwell_offset
+    if uturn_dwell_time is not None:
+        params.fiber.uturn_dwell_time = uturn_dwell_time
+    if uturn_angle_threshold is not None:
+        params.fiber.uturn_angle_threshold = uturn_angle_threshold
+    if uturn_detection_window is not None:
+        params.fiber.uturn_detection_window = uturn_detection_window
 
     import matplotlib.pyplot as plt
 
@@ -378,6 +390,10 @@ def fibre_paths_to_gcode(
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
+    uturn_dwell_offset: Optional[float] = None,
+    uturn_dwell_time: Optional[float] = None,
+    uturn_angle_threshold: Optional[float] = None,
+    uturn_detection_window: Optional[float] = None,
     skip_empty: Optional[bool] = None,
     **kwargs,
 ):
@@ -456,6 +472,28 @@ def fibre_paths_to_gcode(
     if skip_empty is None:
         skip_empty = not polymer_fill
 
+    # Apply override kwargs to ``params`` here so they reach both backends
+    # (``svg_to_gcode_polymer_fill`` and the plain ``svg_to_gcode``).  The
+    # polymer-fill backend re-applies any non-None forwarded kwargs to params,
+    # but a non-polymer dispatch (``polymer_fill=False``) goes to a backend
+    # that doesn't see these kwargs at all — so we must update params here.
+    if params is None:
+        params = FibrifierParams()
+    if fiber_cut is not None:
+        params.fiber.fiber_cut = fiber_cut
+    if manual_fiber_cut is not None:
+        params.fiber.manual_cut = manual_fiber_cut
+    if skip_mesh_leveling is not None:
+        params.skip_mesh_leveling = skip_mesh_leveling
+    if uturn_dwell_offset is not None:
+        params.fiber.uturn_dwell_offset = uturn_dwell_offset
+    if uturn_dwell_time is not None:
+        params.fiber.uturn_dwell_time = uturn_dwell_time
+    if uturn_angle_threshold is not None:
+        params.fiber.uturn_angle_threshold = uturn_angle_threshold
+    if uturn_detection_window is not None:
+        params.fiber.uturn_detection_window = uturn_detection_window
+
     if isinstance(source, (str, _Path)) and _Path(source).is_dir():
         svgs = collect_layer_svgs(source, layers=layers, skip_empty=skip_empty)
         if not svgs:
@@ -489,7 +527,11 @@ def fibre_paths_to_gcode(
             polymer_perimeter_pitch=polymer_perimeter_pitch,
             cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut,
             manual_fiber_cut=manual_fiber_cut,
-            skip_mesh_leveling=skip_mesh_leveling, **kwargs,
+            skip_mesh_leveling=skip_mesh_leveling,
+            uturn_dwell_offset=uturn_dwell_offset,
+            uturn_dwell_time=uturn_dwell_time,
+            uturn_angle_threshold=uturn_angle_threshold,
+            uturn_detection_window=uturn_detection_window, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
 
