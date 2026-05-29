@@ -154,7 +154,7 @@ def svg_to_gcode_polymer_fill(
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
     uturn_dwell_offset: Optional[float] = None,
-    uturn_dwell_time: Optional[float] = None,
+    uturn_press_ratio: Optional[float] = None,
     uturn_angle_threshold: Optional[float] = None,
     uturn_detection_window: Optional[float] = None,
     connection_threshold: float = 5.0,
@@ -205,8 +205,8 @@ def svg_to_gcode_polymer_fill(
         params.skip_mesh_leveling = skip_mesh_leveling
     if uturn_dwell_offset is not None:
         params.fiber.uturn_dwell_offset = uturn_dwell_offset
-    if uturn_dwell_time is not None:
-        params.fiber.uturn_dwell_time = uturn_dwell_time
+    if uturn_press_ratio is not None:
+        params.fiber.uturn_press_ratio = uturn_press_ratio
     if uturn_angle_threshold is not None:
         params.fiber.uturn_angle_threshold = uturn_angle_threshold
     if uturn_detection_window is not None:
@@ -391,7 +391,7 @@ def fibre_paths_to_gcode(
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
     uturn_dwell_offset: Optional[float] = None,
-    uturn_dwell_time: Optional[float] = None,
+    uturn_press_ratio: Optional[float] = None,
     uturn_angle_threshold: Optional[float] = None,
     uturn_detection_window: Optional[float] = None,
     skip_empty: Optional[bool] = None,
@@ -487,8 +487,8 @@ def fibre_paths_to_gcode(
         params.skip_mesh_leveling = skip_mesh_leveling
     if uturn_dwell_offset is not None:
         params.fiber.uturn_dwell_offset = uturn_dwell_offset
-    if uturn_dwell_time is not None:
-        params.fiber.uturn_dwell_time = uturn_dwell_time
+    if uturn_press_ratio is not None:
+        params.fiber.uturn_press_ratio = uturn_press_ratio
     if uturn_angle_threshold is not None:
         params.fiber.uturn_angle_threshold = uturn_angle_threshold
     if uturn_detection_window is not None:
@@ -529,7 +529,7 @@ def fibre_paths_to_gcode(
             manual_fiber_cut=manual_fiber_cut,
             skip_mesh_leveling=skip_mesh_leveling,
             uturn_dwell_offset=uturn_dwell_offset,
-            uturn_dwell_time=uturn_dwell_time,
+            uturn_press_ratio=uturn_press_ratio,
             uturn_angle_threshold=uturn_angle_threshold,
             uturn_detection_window=uturn_detection_window, **kwargs,
         )

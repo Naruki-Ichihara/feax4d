@@ -615,13 +615,16 @@ class FibrifierFiberParams:
     manual_cut_lift: float = 20.0           # Z lift during the pause [mm]
     manual_cut_extrude: float = 20.0        # fibre dispensed during the lift [mm]
 
-    # Hairpin (~180°) U-turn adhesion dwell.  After the rotary turn, the nozzle
-    # continues along the path for ``uturn_dwell_offset`` mm and then halts in
-    # place for ``uturn_dwell_time`` seconds (a G4 wall-time dwell), giving the
-    # freshly-laid tow time to bond to the underlying layer before continuing.
-    # Both knobs > 0 to enable; either at 0 disables the feature.
-    uturn_dwell_offset: float = 0.0         # mm travelled past the turn before dwelling
-    uturn_dwell_time: float = 0.0           # seconds to dwell in place (G4 S<time>)
+    # Hairpin (~180°) U-turn adhesion press.  After the rotary turn, the nozzle
+    # continues along the path for ``uturn_dwell_offset`` mm, presses Z down by
+    # ``uturn_press_ratio × layer_height`` (squeezing the fresh tow against the
+    # underlying layer), and pauses on M0 until the operator presses resume —
+    # the Z is then restored and the path continues.
+    # Enable by setting ``uturn_dwell_offset > 0``; ``uturn_press_ratio = 0``
+    # gives a press-less M0 pause at the planned Z.
+    uturn_dwell_offset: float = 0.0         # mm travelled past the turn before pause
+    uturn_press_ratio: float = 0.10         # Z press as a fraction of layer_height
+                                            # (0.10 = 10% of current layer thickness)
     uturn_angle_threshold: float = 150.0    # deg — |cumulative Δheading| above this
                                             # over the detection window counts as a
                                             # 180° hairpin (only fibre, not polymer)
@@ -1011,7 +1014,7 @@ class FibrifierGcodeGenerator:
         self.manual_cut_lift = p.fiber.manual_cut_lift
         self.manual_cut_extrude = p.fiber.manual_cut_extrude
         self.uturn_dwell_offset = p.fiber.uturn_dwell_offset
-        self.uturn_dwell_time = p.fiber.uturn_dwell_time
+        self.uturn_press_ratio = p.fiber.uturn_press_ratio
         self.uturn_angle_threshold = p.fiber.uturn_angle_threshold
         self.uturn_detection_window = p.fiber.uturn_detection_window
 
@@ -1501,9 +1504,8 @@ class FibrifierGcodeGenerator:
         # Threshold for in-place turn (degrees)
         IN_PLACE_TURN_THRESHOLD = 30.0
 
-        # Hairpin / U-turn adhesion dwell — see FibrifierFiberParams.
-        uturn_dwell_enabled = (self.uturn_dwell_offset > 0.0
-                                and self.uturn_dwell_time > 0.0)
+        # Hairpin / U-turn adhesion press — see FibrifierFiberParams.
+        uturn_dwell_enabled = self.uturn_dwell_offset > 0.0
         # dist_after_uturn: mm travelled since the most recent qualifying U-turn,
         # or None when no dwell is pending.
         dist_after_uturn = None
@@ -1597,9 +1599,16 @@ class FibrifierGcodeGenerator:
                         f"Z{z:.4f} W0.0000 "
                         f"F{self.after_cut_feed}\n")
             elif split_pt is not None:
-                # Before cut, dwell-splitting this segment.  Apply the turn (in
-                # place or rolled into the first sub-move) just as the unsplit
-                # path does, then emit: G1 → G4 → G1 (continuation, no rotation).
+                # Before cut, split this segment at the trigger point.  Apply
+                # the turn (in place or rolled into the first sub-move) just as
+                # the unsplit path does, then emit:
+                #   G1 (part 1)
+                #   G91 / G1 Z-press / G90   ← press the tow into the layer
+                #   M0                       ← user pauses (cut / inspect / etc.)
+                #   G91 / G1 Z+press / G90   ← restore Z
+                #   G1 (part 2)
+                # ``uturn_press_ratio == 0`` skips the press, leaving a bare M0
+                # pause at the planned layer Z.
                 sx, sy, d1 = split_pt
                 d2 = dist - d1
                 e1 = d1 * self.cf_em
@@ -1614,13 +1623,28 @@ class FibrifierGcodeGenerator:
                     f.write(f"G1 X{self._tx(sx):.4f} Y{self._ty(sy):.4f} "
                             f"Z{z:.4f} E{e1:.4f}{w_cmd} F{self.cf_feed}\n")
                     current_abs_angle = target_angle
-                f.write(f"G4 S{self.uturn_dwell_time:.4f} "
-                        f";u-turn adhesion dwell ({self.uturn_dwell_offset:.2f}mm "
-                        f"past 180° turn)\n")
+                press_mm = self.uturn_press_ratio * self.layer_height
+                f.write(";------------------------\n")
+                f.write(f"; - U-TURN ADHESION PRESS "
+                        f"({self.uturn_dwell_offset:.2f}mm past 180° turn, "
+                        f"Z press={press_mm:.4f}mm = {self.uturn_press_ratio*100:.1f}% "
+                        f"× layer_height {self.layer_height:.4f}mm) -\n")
+                f.write(";------------------------\n")
+                if press_mm > 0.0:
+                    f.write("G91 ; relative coordinates\n")
+                    f.write(f"G1 Z-{press_mm:.4f} F{self.cf_feed} "
+                            f";press nozzle into layer\n")
+                    f.write("G90 ; absolute coordinates\n")
+                f.write("M0 ; PAUSE — u-turn adhesion, press resume when seated\n")
+                if press_mm > 0.0:
+                    f.write("G91 ; relative coordinates\n")
+                    f.write(f"G1 Z{press_mm:.4f} F{self.cf_feed} "
+                            f";restore Z to layer plane\n")
+                    f.write("G90 ; absolute coordinates\n")
                 if d2 > 1e-5:
                     f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
                             f"Z{z:.4f} E{e2:.4f} F{self.cf_feed}\n")
-                dist_after_uturn = None    # dwell consumed
+                dist_after_uturn = None    # press / pause consumed
             else:
                 # Before cut: extrude with rotation
                 if abs(w_delta) > IN_PLACE_TURN_THRESHOLD:

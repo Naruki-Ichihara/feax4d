@@ -69,26 +69,30 @@ def main():
         manual_fiber_cut=True,    # lift nozzle (dispensing) + pause for a hand cut
                                   # between fibre layers, then re-anchor
         skip_mesh_leveling=True,  # omit G29 mesh-bed-leveling at start of print
-        # ── Fibre hairpin (~180°) adhesion dwell ──
+        # ── Fibre hairpin (~180°) adhesion press ──
         # After a 180° turn the nozzle travels uturn_dwell_offset mm along the
-        # new direction, then halts in place for uturn_dwell_time seconds
-        # (G4 S<sec>) so the freshly-laid tow bonds to the underlying material
-        # before continuing.  Both > 0 to enable; either = 0 disables.
-        uturn_dwell_offset=0.0,       # mm past the turn before dwelling
-        uturn_dwell_time=0.0,         # seconds to dwell in place
-        uturn_angle_threshold=150.0,  # deg — cumulative |Δheading| above this
-                                      # over the detection window counts as a hairpin
-        uturn_detection_window=6.0,   # mm — rolling window for the heading-change sum
+        # new direction, presses Z down by uturn_press_ratio × layer_height
+        # (squeezing the fresh tow against the underlying layer), and pauses
+        # on M0 until the operator presses resume — then Z is restored and the
+        # path continues.  Enable by setting uturn_dwell_offset > 0;
+        # uturn_press_ratio = 0 gives a press-less M0 pause at the planned Z.
+        uturn_dwell_offset=0.0,        # mm past the turn before pausing
+        uturn_press_ratio=0.10,        # Z press as a fraction of layer_height
+        uturn_angle_threshold=150.0,   # deg — cumulative |Δheading| above this
+                                       # over the detection window counts as a hairpin
+        uturn_detection_window=6.0,    # mm — rolling window for the heading-change sum
     )
     print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "
           f"polymer paths={result['n_polymer_paths']}  "
           f"total fibre={result['total_fiber_mm']:.0f} mm")
 
     # Sanity check — confirm the optional features actually landed in the g-code.
+    # (Manual-cut M0 is recognisable by its distinctive comment; U-turn presses
+    # use the U-TURN ADHESION PRESS header, so we can count them separately.)
     gcode_text = (out_dir / "verify.gcode").read_text()
-    print(f"M0 pauses={gcode_text.count(chr(10) + 'M0 ')}  "
+    print(f"M0 (manual cut)={gcode_text.count('PAUSE — cut the fibre')}  "
           f"G29 lines={sum(1 for ln in gcode_text.splitlines() if ln.startswith('G29'))}  "
-          f"U-turn dwells={gcode_text.count('u-turn adhesion dwell')}")
+          f"U-turn presses={gcode_text.count('U-TURN ADHESION PRESS')}")
 
     # 3D print-path view.
     fig = feax4d.plot_print_paths(result, elev=22, azim=-60, layer_gap=6.0)
