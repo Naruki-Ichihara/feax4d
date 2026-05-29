@@ -643,6 +643,10 @@ class FibrifierParams:
     offset_y: float = 135.0            # Machine Y offset (mm)
     layer_height: float = 0.15         # Layer height (mm)
 
+    # Start-up
+    skip_mesh_leveling: bool = False   # True = omit the G29 mesh-bed-leveling probe
+                                       # at the start of the print
+
     # Layer structure
     polymer_perimeter: bool = True      # Include polymer perimeter layer (P) before each fiber layer
     infill_angle: float = None          # Infill angle for perimeter layers (deg). None=no infill
@@ -957,6 +961,7 @@ class FibrifierGcodeGenerator:
         self.offset_x = p.offset_x
         self.offset_y = p.offset_y
         self.layer_height = p.layer_height
+        self.skip_mesh_leveling = p.skip_mesh_leveling
 
         self.cf_em = p.extrusion.cf_extrusion_multiplier
         self.pl_flow = p.extrusion.pl_extrusion_multiplier
@@ -1203,7 +1208,8 @@ class FibrifierGcodeGenerator:
         f.write(f"\n")
         pl_75 = int(self.pl_temp * 0.75)
         f.write(f"M104 S{pl_75} T1 ; set 75% polymer nozzle temp\n")
-        f.write(f"G29 ; Meshbed leveling\n")
+        if not self.skip_mesh_leveling:
+            f.write(f"G29 ; Meshbed leveling\n")
         f.write(f"\n")
         f.write(f"G0 Z3.0000 F{self.rapid_feed}\n")
         f.write(f"\n")

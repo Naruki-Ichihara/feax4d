@@ -152,6 +152,7 @@ def svg_to_gcode_polymer_fill(
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
+    skip_mesh_leveling: Optional[bool] = None,
     connection_threshold: float = 5.0,
     min_fiber_length: float = 23.73,
     smooth_sigma: float = 3.0,
@@ -196,6 +197,8 @@ def svg_to_gcode_polymer_fill(
         params.fiber.fiber_cut = fiber_cut
     if manual_fiber_cut is not None:
         params.fiber.manual_cut = manual_fiber_cut
+    if skip_mesh_leveling is not None:
+        params.skip_mesh_leveling = skip_mesh_leveling
 
     import matplotlib.pyplot as plt
 
@@ -374,6 +377,7 @@ def fibre_paths_to_gcode(
     coplanar: bool = True,
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
+    skip_mesh_leveling: Optional[bool] = None,
     skip_empty: Optional[bool] = None,
     **kwargs,
 ):
@@ -484,7 +488,8 @@ def fibre_paths_to_gcode(
             polymer_perimeters=polymer_perimeters,
             polymer_perimeter_pitch=polymer_perimeter_pitch,
             cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut,
-            manual_fiber_cut=manual_fiber_cut, **kwargs,
+            manual_fiber_cut=manual_fiber_cut,
+            skip_mesh_leveling=skip_mesh_leveling, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
 
