@@ -1386,11 +1386,12 @@ class FibrifierGcodeGenerator:
 
     def _write_manual_cut_pause(self, f, z):
         """Lift the nozzle while extruding fibre, then pause for a hand cut."""
+        e = self.manual_cut_extrude * self.cf_em   # apply fibre feed coefficient
         f.write(";------------------------\n")
         f.write("; - MANUAL FIBRE CUT (lift + pause) -\n")
         f.write(";------------------------\n")
         f.write("G91 ; relative coordinates\n")
-        f.write(f"G1 Z{self.manual_cut_lift:.4f} E{self.manual_cut_extrude:.4f} "
+        f.write(f"G1 Z{self.manual_cut_lift:.4f} E{e:.4f} "
                 f"F{self.cf_feed} ; raise nozzle while dispensing fibre\n")
         f.write("G90 ; absolute coordinates\n")
         f.write("M0 ; PAUSE — cut the fibre by hand, then press resume\n")
