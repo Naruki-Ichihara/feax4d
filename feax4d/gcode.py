@@ -153,10 +153,9 @@ def svg_to_gcode_polymer_fill(
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
-    uturn_dwell_offset: Optional[float] = None,
-    uturn_press_ratio: Optional[float] = None,
-    uturn_angle_threshold: Optional[float] = None,
-    uturn_detection_window: Optional[float] = None,
+    uturn_escape: Optional[float] = None,
+    uturn_lift: Optional[float] = None,
+    uturn_extrude: Optional[float] = None,
     connection_threshold: float = 5.0,
     min_fiber_length: float = 23.73,
     smooth_sigma: float = 3.0,
@@ -203,14 +202,12 @@ def svg_to_gcode_polymer_fill(
         params.fiber.manual_cut = manual_fiber_cut
     if skip_mesh_leveling is not None:
         params.skip_mesh_leveling = skip_mesh_leveling
-    if uturn_dwell_offset is not None:
-        params.fiber.uturn_dwell_offset = uturn_dwell_offset
-    if uturn_press_ratio is not None:
-        params.fiber.uturn_press_ratio = uturn_press_ratio
-    if uturn_angle_threshold is not None:
-        params.fiber.uturn_angle_threshold = uturn_angle_threshold
-    if uturn_detection_window is not None:
-        params.fiber.uturn_detection_window = uturn_detection_window
+    if uturn_escape is not None:
+        params.fiber.uturn_escape = uturn_escape
+    if uturn_lift is not None:
+        params.fiber.uturn_lift = uturn_lift
+    if uturn_extrude is not None:
+        params.fiber.uturn_extrude = uturn_extrude
 
     import matplotlib.pyplot as plt
 
@@ -390,10 +387,9 @@ def fibre_paths_to_gcode(
     fiber_cut: Optional[bool] = None,
     manual_fiber_cut: Optional[bool] = None,
     skip_mesh_leveling: Optional[bool] = None,
-    uturn_dwell_offset: Optional[float] = None,
-    uturn_press_ratio: Optional[float] = None,
-    uturn_angle_threshold: Optional[float] = None,
-    uturn_detection_window: Optional[float] = None,
+    uturn_escape: Optional[float] = None,
+    uturn_lift: Optional[float] = None,
+    uturn_extrude: Optional[float] = None,
     skip_empty: Optional[bool] = None,
     **kwargs,
 ):
@@ -485,14 +481,12 @@ def fibre_paths_to_gcode(
         params.fiber.manual_cut = manual_fiber_cut
     if skip_mesh_leveling is not None:
         params.skip_mesh_leveling = skip_mesh_leveling
-    if uturn_dwell_offset is not None:
-        params.fiber.uturn_dwell_offset = uturn_dwell_offset
-    if uturn_press_ratio is not None:
-        params.fiber.uturn_press_ratio = uturn_press_ratio
-    if uturn_angle_threshold is not None:
-        params.fiber.uturn_angle_threshold = uturn_angle_threshold
-    if uturn_detection_window is not None:
-        params.fiber.uturn_detection_window = uturn_detection_window
+    if uturn_escape is not None:
+        params.fiber.uturn_escape = uturn_escape
+    if uturn_lift is not None:
+        params.fiber.uturn_lift = uturn_lift
+    if uturn_extrude is not None:
+        params.fiber.uturn_extrude = uturn_extrude
 
     if isinstance(source, (str, _Path)) and _Path(source).is_dir():
         svgs = collect_layer_svgs(source, layers=layers, skip_empty=skip_empty)
@@ -528,10 +522,9 @@ def fibre_paths_to_gcode(
             cross_hatch=cross_hatch, coplanar=coplanar, fiber_cut=fiber_cut,
             manual_fiber_cut=manual_fiber_cut,
             skip_mesh_leveling=skip_mesh_leveling,
-            uturn_dwell_offset=uturn_dwell_offset,
-            uturn_press_ratio=uturn_press_ratio,
-            uturn_angle_threshold=uturn_angle_threshold,
-            uturn_detection_window=uturn_detection_window, **kwargs,
+            uturn_escape=uturn_escape,
+            uturn_lift=uturn_lift,
+            uturn_extrude=uturn_extrude, **kwargs,
         )
     return svg_to_gcode(svgs, output_gcode=output_gcode, params=params, **kwargs)
 
