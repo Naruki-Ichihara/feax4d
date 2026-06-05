@@ -615,28 +615,25 @@ class FibrifierFiberParams:
     manual_cut_lift: float = 20.0           # Z lift during the pause [mm]
     manual_cut_extrude: float = 20.0        # fibre dispensed during the lift [mm]
 
-    # Continuous-fibre stretch re-anchoring (when ``fiber_cut`` is False).
-    # At each in-layer stretch boundary (e.g. pass-to-pass in ``kind="lines"``
-    # test paths) the tow stays uncut, so the nozzle:
-    #   1. continues forward in the *last segment's direction* for
-    #      ``uturn_escape`` mm while lifting Z by ``uturn_lift`` mm and
-    #      dispensing ``uturn_extrude`` mm of tow (the dispense keeps the
-    #      tow flowing while the nozzle escapes upward off the part);
-    #   2. rapids to the next stretch's anchor position with W absolute set
-    #      to the new heading (handles the 180° rotation);
-    #   3. descends onto the new start, dragging the tow;
-    #   4. dwells ``anchoring_dwell`` ms (standard anchor dwell);
-    #   5. continues printing.
-    # Same-Z stretch transitions only — layer-to-layer climbs (different Z)
-    # use the simpler "climb in place" path.  Snake (single connected path)
-    # has no stretch transitions inside a layer, so this feature does
-    # nothing in snake mode.
-    # ``uturn_escape = 0`` disables the feature and falls back to a simple
-    # climb everywhere (the original behaviour).
-    uturn_escape: float = 0.0               # mm forward in last segment's direction
-                                            # during the escape (0 = disabled)
-    uturn_lift: float = 5.0                 # mm of Z lift during the escape
-    uturn_extrude: float = 5.0              # mm of fibre dispensed during the escape
+    # Hairpin (~180°) U-turn adhesion press.  After the rotary turn, the nozzle
+    # continues along the path for ``uturn_dwell_offset`` mm, presses Z down by
+    # ``uturn_press_ratio × layer_height`` (squeezing the fresh tow against the
+    # underlying layer), and pauses on M0 until the operator presses resume —
+    # the Z is then restored and the path continues.
+    # Enable by setting ``uturn_dwell_offset > 0``; ``uturn_press_ratio = 0``
+    # gives a press-less M0 pause at the planned Z.
+    uturn_dwell_offset: float = 0.0         # mm travelled past the turn before pause
+    uturn_press_ratio: float = 0.10         # Z press as a fraction of layer_height
+                                            # (0.10 = 10% of current layer thickness)
+    uturn_angle_threshold: float = 150.0    # deg — |cumulative Δheading| above this
+                                            # over the detection window counts as a
+                                            # 180° hairpin (only fibre, not polymer)
+    uturn_detection_window: float = 6.0     # mm — rolling window over which the
+                                            # heading-change sum is taken; smoothing
+                                            # / decimation spreads sharp corners over
+                                            # several short segments, so a per-segment
+                                            # check misses them — the cumulative sum
+                                            # over this window catches them
 
 
 @dataclass
@@ -1016,13 +1013,10 @@ class FibrifierGcodeGenerator:
         self.manual_cut = p.fiber.manual_cut
         self.manual_cut_lift = p.fiber.manual_cut_lift
         self.manual_cut_extrude = p.fiber.manual_cut_extrude
-        self.uturn_escape = p.fiber.uturn_escape
-        self.uturn_lift = p.fiber.uturn_lift
-        self.uturn_extrude = p.fiber.uturn_extrude
-        # State carried between stretches for re-anchoring.
-        self._last_end_xy = None        # (x, y) world coords of previous stretch end
-        self._last_end_angle = None     # heading at the end of the previous stretch
-        self._last_z = None             # Z of the previous stretch (for same-Z check)
+        self.uturn_dwell_offset = p.fiber.uturn_dwell_offset
+        self.uturn_press_ratio = p.fiber.uturn_press_ratio
+        self.uturn_angle_threshold = p.fiber.uturn_angle_threshold
+        self.uturn_detection_window = p.fiber.uturn_detection_window
 
         # Derived
         self.after_cut_feed = int(self.after_cut_speed / 100.0 * self.cf_feed)
@@ -1062,9 +1056,6 @@ class FibrifierGcodeGenerator:
         """
         self._stretch_counter = 0
         self._fiber_started = False
-        self._last_end_xy = None
-        self._last_end_angle = None
-        self._last_z = None
 
         with open(filename, "w") as f:
             # Compute bounding box in machine coords
@@ -1422,10 +1413,6 @@ class FibrifierGcodeGenerator:
         if self.manual_cut and not self.fiber_cut:
             self._write_manual_cut_pause(f, z)
             self._fiber_started = False
-            # Manual cut severs the tow → the next stretch is a fresh anchor.
-            self._last_end_xy = None
-            self._last_end_angle = None
-            self._last_z = None
 
     def _write_manual_cut_pause(self, f, z):
         """Lift the nozzle while extruding fibre, then pause for a hand cut."""
@@ -1484,58 +1471,15 @@ class FibrifierGcodeGenerator:
         anchor = _anchor_point(nodes, self.nozzle_dead_length)
 
         if (not self.fiber_cut) and self._fiber_started:
-            # Continuous fibre — tow uncut from previous stretch.
-            #
-            # Same-Z (in-layer pass-to-pass) and uturn_escape > 0:
-            #   ESCAPE in last segment's direction (forward + lift, dispensing
-            #   tow), then APPROACH new anchor (rapid, W rotates absolute to the
-            #   new heading — this absorbs the 180°), DESCEND onto new start
-            #   dragging tow, DWELL.  Mirrors the initial-anchor sequence but
-            #   skips the standalone "G0 E23.5 load" since we dispensed during
-            #   the escape.
-            #
-            # Different Z (Z-chunk / layer climb) or uturn_escape = 0:
-            #   The original "climb to next layer at start point" — single G1
-            #   to the new (X, Y, Z) with W rotated absolute to the new heading.
-            same_z = (self._last_z is not None
-                       and abs(z - self._last_z) < 1e-5)
-            do_reanchor = (self.uturn_escape > 0.0
-                            and same_z
-                            and self._last_end_xy is not None
-                            and self._last_end_angle is not None)
-            if do_reanchor:
-                ang = math.radians(self._last_end_angle)
-                esc_x = self._last_end_xy[0] + self.uturn_escape * math.cos(ang)
-                esc_y = self._last_end_xy[1] + self.uturn_escape * math.sin(ang)
-                esc_z = self._last_z + self.uturn_lift
-                e_esc = self.uturn_extrude * self.cf_em
-                f.write(";------------------------\n")
-                f.write(f"; - U-TURN RE-ANCHOR "
-                        f"(escape {self.uturn_escape:.2f}mm fwd, "
-                        f"lift {self.uturn_lift:.2f}mm, "
-                        f"dispense {self.uturn_extrude:.2f}mm fibre) -\n")
-                f.write(";------------------------\n")
-                # ── 1. escape: lift + forward + dispense in last direction ──
-                f.write(f"G1 X{self._tx(esc_x):.4f} Y{self._ty(esc_y):.4f} "
-                        f"Z{esc_z:.4f} E{e_esc:.4f} F{self.cf_feed} "
-                        f";escape in last direction while lifting & dispensing\n")
-                # ── 2. approach new anchor — W absolute = new heading ──
-                f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
-                f.write(f"G0 X{self._tx(anchor[0]):.4f} Y{self._ty(anchor[1]):.4f} "
-                        f"Z{z + self.anchor_height:.4f} W{raw_start_angle:.4f} "
-                        f"F{self.rapid_feed} ;rapid to new anchor (W rotates absolute)\n")
-                f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
-                # ── 3. descend onto start, drag fibre, dwell ──
-                f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
-                        f"Z{z:.4f} F{self.cf_feed} ;descend onto start (drag fibre in)\n")
-                f.write(f"G4 P{self.anchor_dwell} ;re-anchor dwell\n")
-            else:
-                # Simple climb (Z-chunk transition, or feature disabled).
-                f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
-                f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
-                        f"Z{z:.4f} W{raw_start_angle:.4f} F{self.cf_feed} "
-                        f";continuous fibre — climb to next layer\n")
-                f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
+            # Continuous fibre: the tow is uncut from the previous stretch, so
+            # don't re-anchor — just climb to this layer at the start point
+            # (raising Z by one layer at the same X/Y when stretches are ordered
+            # end-to-start), then keep extruding.
+            f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
+            f.write(f"G1 X{self._tx(nodes[0][0]):.4f} Y{self._ty(nodes[0][1]):.4f} "
+                    f"Z{z:.4f} W{raw_start_angle:.4f} F{self.cf_feed} "
+                    f";continuous fibre — climb to next layer\n")
+            f.write(f"USE_RELATIVE_ROTARY_POSITION\n")
         else:
             # Move to anchor position with correct nozzle orientation
             f.write(f"USE_ABSOLUTE_ROTARY_POSITION\n")
@@ -1559,6 +1503,18 @@ class FibrifierGcodeGenerator:
 
         # Threshold for in-place turn (degrees)
         IN_PLACE_TURN_THRESHOLD = 30.0
+
+        # Hairpin / U-turn adhesion press — see FibrifierFiberParams.
+        uturn_dwell_enabled = self.uturn_dwell_offset > 0.0
+        # dist_after_uturn: mm travelled since the most recent qualifying U-turn,
+        # or None when no dwell is pending.
+        dist_after_uturn = None
+        # turn_window: rolling list of (segment_length, heading_change) for the
+        # most recent <= uturn_detection_window mm of EXTRUDED path.  Sharp
+        # corners get chamfered by smoothing/decimation into several short
+        # segments, each below threshold; the cumulative sum over this window
+        # is what flags a hairpin.
+        turn_window = []
 
         # Compute cumulative distance from end for preheat scheduling
         dist_from_end = _cumulative_distances_from_end(nodes)
@@ -1598,6 +1554,41 @@ class FibrifierGcodeGenerator:
             w_delta = _wrap_angle(target_angle - current_abs_angle)
             past_cut = cut_emitted
 
+            # Hairpin detection (extruded segments only — pull-through doesn't
+            # need adhesion).  Sum heading-changes over the rolling window plus
+            # *this* segment's change: if the cumulative |Δheading| crosses the
+            # threshold, we've just exited a hairpin and arm the post-turn
+            # distance counter.  The check happens before adding this segment to
+            # the window so that long post-turn segments don't trim away the
+            # corner-history we need.
+            if (uturn_dwell_enabled and not past_cut
+                    and dist_after_uturn is None):
+                cum_dtheta = sum(a for _, a in turn_window) + w_delta
+                if abs(cum_dtheta) > self.uturn_angle_threshold:
+                    dist_after_uturn = 0.0
+                    turn_window = []   # reset so we don't re-trigger on the tail
+            # Update the rolling window with this segment, then trim from the
+            # front so the total length stays <= uturn_detection_window mm.
+            # (Keep at least one entry — a single segment longer than the window
+            # is fine; it contributes its own heading change.)
+            if uturn_dwell_enabled and not past_cut:
+                turn_window.append((dist, w_delta))
+                total_len = sum(d for d, _ in turn_window)
+                while (len(turn_window) > 1
+                       and total_len > self.uturn_detection_window):
+                    total_len -= turn_window.pop(0)[0]
+
+            # Will this segment cross the dwell offset?  If so, split it at the
+            # exact point so the G4 dwell lands `uturn_dwell_offset` mm past
+            # the turn (not whatever the next node happens to be).
+            split_pt = None
+            if (dist_after_uturn is not None) and (not past_cut):
+                remaining = self.uturn_dwell_offset - dist_after_uturn
+                if 0.0 < remaining <= dist:
+                    frac = remaining / dist
+                    split_pt = (prev[0] + frac * dx, prev[1] + frac * dy,
+                                remaining)
+
             if past_cut:
                 # After cut: no extrusion, follow path for pull-through
                 # Use in-place turn if needed, then move with W=0
@@ -1607,6 +1598,53 @@ class FibrifierGcodeGenerator:
                 f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
                         f"Z{z:.4f} W0.0000 "
                         f"F{self.after_cut_feed}\n")
+            elif split_pt is not None:
+                # Before cut, split this segment at the trigger point.  Apply
+                # the turn (in place or rolled into the first sub-move) just as
+                # the unsplit path does, then emit:
+                #   G1 (part 1)
+                #   G91 / G1 Z-press / G90   ← press the tow into the layer
+                #   M0                       ← user pauses (cut / inspect / etc.)
+                #   G91 / G1 Z+press / G90   ← restore Z
+                #   G1 (part 2)
+                # ``uturn_press_ratio == 0`` skips the press, leaving a bare M0
+                # pause at the planned layer Z.
+                sx, sy, d1 = split_pt
+                d2 = dist - d1
+                e1 = d1 * self.cf_em
+                e2 = d2 * self.cf_em
+                if abs(w_delta) > IN_PLACE_TURN_THRESHOLD:
+                    f.write(f"G1 W{w_delta:.4f} ;in place turn\n")
+                    current_abs_angle = target_angle
+                    f.write(f"G1 X{self._tx(sx):.4f} Y{self._ty(sy):.4f} "
+                            f"Z{z:.4f} W0.0000 E{e1:.4f} F{self.cf_feed}\n")
+                else:
+                    w_cmd = f" W{w_delta:.4f}" if abs(w_delta) > 0.01 else ""
+                    f.write(f"G1 X{self._tx(sx):.4f} Y{self._ty(sy):.4f} "
+                            f"Z{z:.4f} E{e1:.4f}{w_cmd} F{self.cf_feed}\n")
+                    current_abs_angle = target_angle
+                press_mm = self.uturn_press_ratio * self.layer_height
+                f.write(";------------------------\n")
+                f.write(f"; - U-TURN ADHESION PRESS "
+                        f"({self.uturn_dwell_offset:.2f}mm past 180° turn, "
+                        f"Z press={press_mm:.4f}mm = {self.uturn_press_ratio*100:.1f}% "
+                        f"× layer_height {self.layer_height:.4f}mm) -\n")
+                f.write(";------------------------\n")
+                if press_mm > 0.0:
+                    f.write("G91 ; relative coordinates\n")
+                    f.write(f"G1 Z-{press_mm:.4f} F{self.cf_feed} "
+                            f";press nozzle into layer\n")
+                    f.write("G90 ; absolute coordinates\n")
+                f.write("M0 ; PAUSE — u-turn adhesion, press resume when seated\n")
+                if press_mm > 0.0:
+                    f.write("G91 ; relative coordinates\n")
+                    f.write(f"G1 Z{press_mm:.4f} F{self.cf_feed} "
+                            f";restore Z to layer plane\n")
+                    f.write("G90 ; absolute coordinates\n")
+                if d2 > 1e-5:
+                    f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
+                            f"Z{z:.4f} E{e2:.4f} F{self.cf_feed}\n")
+                dist_after_uturn = None    # press / pause consumed
             else:
                 # Before cut: extrude with rotation
                 if abs(w_delta) > IN_PLACE_TURN_THRESHOLD:
@@ -1624,6 +1662,9 @@ class FibrifierGcodeGenerator:
                     f.write(f"G1 X{self._tx(x):.4f} Y{self._ty(y):.4f} "
                             f"Z{z:.4f} E{e_val:.4f}{w_cmd} F{self.cf_feed}\n")
                     current_abs_angle = target_angle
+                # Accumulate distance toward a still-pending dwell.
+                if dist_after_uturn is not None:
+                    dist_after_uturn += dist
 
             prev = (x, y)
 
@@ -1642,16 +1683,6 @@ class FibrifierGcodeGenerator:
         f.write(f";------------------------\n")
         f.write(f"; - END OF Fiber STRETCH #{stretch_id} -\n")
         f.write(f";------------------------\n")
-
-        # Record state so the NEXT stretch's continuous-fibre re-anchor knows
-        # where the tow currently is and which direction it was heading.  Use
-        # the raw last-segment angle (not the smoothed one) so the escape goes
-        # along the physical direction of the final move.
-        if n >= 2:
-            self._last_end_xy = (nodes[-1][0], nodes[-1][1])
-            self._last_end_angle = _segment_angle_deg(
-                nodes[-2][0], nodes[-2][1], nodes[-1][0], nodes[-1][1])
-            self._last_z = z
 
     # ── Footer ──────────────────────────────────────────────
 

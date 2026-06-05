@@ -18,13 +18,11 @@ def main():
     svg = out_dir / "fibre_paths_layer0.svg"
 
     # 100 x 50 mm rectangle; straight fibres along the long (100 mm) axis,
-    # spaced 2 mm across the 50 mm width.  ``kind="lines"`` makes each pass
-    # a separate stretch — required for the re-anchor sequence below to fire
-    # at every hairpin (snake = single connected path, no stretch breaks).
-    # ``outward_offset`` extends each fibre pass past both ends of the
-    # rectangle by N mm (handy for anchoring outside the part).
+    # spaced 4 mm across the 50 mm width.  ``outward_offset`` extends each
+    # fibre pass past both ends of the rectangle by N mm (handy for anchoring
+    # / hand-cutting the tow outside the part); 0 = flush with the edges.
     feax4d.make_test_fibre_svg(
-        svg, width=100.0, height=50.0, pitch=2.0, kind="lines",
+        svg, width=100.0, height=50.0, pitch=2.0, kind="snake",
         outward_offset=3.0,
     )
     print(f"wrote {svg}")
@@ -66,38 +64,35 @@ def main():
         layer_print_layers=10,    # 10 fibre layers
         polymer_top_layers=2,     # 2 polymer-only top layers
         polymer_in_fiber_layers=False,  # fibre-only middle layers (polymer only in caps)
-        # For kind="lines" keep connection_threshold < pitch so adjacent
-        # passes stay as separate stretches (otherwise the loader fuses
-        # them into a single snake-like path and the re-anchor stops firing).
-        connection_threshold=1.5,
+        connection_threshold=4.0,
         fiber_cut=False,          # no machine cutter
         manual_fiber_cut=True,    # lift nozzle (dispensing) + pause for a hand cut
                                   # between fibre layers, then re-anchor
         skip_mesh_leveling=True,  # omit G29 mesh-bed-leveling at start of print
-        # ── Fibre stretch-to-stretch re-anchoring (in-layer hairpins) ──
-        # With kind="lines" each pass is a separate stretch.  Between same-Z
-        # stretches with the tow uncut, the nozzle continues forward in the
-        # previous stretch's end direction for uturn_escape mm while lifting
-        # Z by uturn_lift and dispensing uturn_extrude mm of tow, then
-        # approaches the next stretch's anchor (W rotates absolute to the new
-        # heading), descends onto the new start, and dwells the standard
-        # anchoring time.  Fully automatic.  uturn_escape=0 disables and
-        # falls back to a simple "climb to start" (original behaviour).
-        uturn_escape=5.0,         # mm forward escape in last-segment direction
-        uturn_lift=5.0,           # mm of Z lift during the escape
-        uturn_extrude=5.0,        # mm of fibre dispensed during the escape
+        # ── Fibre hairpin (~180°) adhesion press ──
+        # After a 180° turn the nozzle travels uturn_dwell_offset mm along the
+        # new direction, presses Z down by uturn_press_ratio × layer_height
+        # (squeezing the fresh tow against the underlying layer), and pauses
+        # on M0 until the operator presses resume — then Z is restored and the
+        # path continues.  Enable by setting uturn_dwell_offset > 0;
+        # uturn_press_ratio = 0 gives a press-less M0 pause at the planned Z.
+        uturn_dwell_offset=0.0,        # mm past the turn before pausing
+        uturn_press_ratio=0.10,        # Z press as a fraction of layer_height
+        uturn_angle_threshold=150.0,   # deg — cumulative |Δheading| above this
+                                       # over the detection window counts as a hairpin
+        uturn_detection_window=6.0,    # mm — rolling window for the heading-change sum
     )
     print(f"layers={result['n_layers']}  fibre paths={result['n_fiber_paths']}  "
           f"polymer paths={result['n_polymer_paths']}  "
           f"total fibre={result['total_fiber_mm']:.0f} mm")
 
     # Sanity check — confirm the optional features actually landed in the g-code.
-    # (Manual-cut M0 is recognisable by its distinctive comment; re-anchors
-    # use the U-TURN RE-ANCHOR header, so we can count them separately.)
+    # (Manual-cut M0 is recognisable by its distinctive comment; U-turn presses
+    # use the U-TURN ADHESION PRESS header, so we can count them separately.)
     gcode_text = (out_dir / "verify.gcode").read_text()
     print(f"M0 (manual cut)={gcode_text.count('PAUSE — cut the fibre')}  "
           f"G29 lines={sum(1 for ln in gcode_text.splitlines() if ln.startswith('G29'))}  "
-          f"re-anchors={gcode_text.count('U-TURN RE-ANCHOR')}")
+          f"U-turn presses={gcode_text.count('U-TURN ADHESION PRESS')}")
 
     # 3D print-path view.
     fig = feax4d.plot_print_paths(result, elev=22, azim=-60, layer_gap=6.0)
